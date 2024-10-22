@@ -26,8 +26,9 @@ router.get('/', async function (req, res, next) {
 });
 
 router.post('/', async function (req, res, next) {
-    console.log(req.body);
-    console.log("***********************************************************");
+    console.log("********************* BODY **************************************");
+    console.log(JSON.stringify(req.body, null, 6))
+
 
     let categories = await getCategories();
     let products = await getProducts();
