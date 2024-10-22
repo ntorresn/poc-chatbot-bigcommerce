@@ -1,13 +1,15 @@
 const axios = require('axios');
-const urls = require('./urls');
+const { graphURL } = require('./urls');
 const fs = require('fs');
-const path = require('path');
-
-const refreshAccessToken = require('../services/graph/refreshAccessToken');
 
 
+const {
+    GRAPH_API_TOKEN,
+    CLIENT_SECRET,
+    CLIENT_ID
+} = process.env;
 const instance = axios.create({
-    baseURL: urls.graph.replace("%", abc),
+    baseURL: graphURL,
     headers: {
         "Content-Type": "application/json",
     },
@@ -36,12 +38,7 @@ instance.interceptors.response.use(
             if (err.response.status === 401 && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
-                    const rs = await refreshToken();
-                    const { token, refreshToken } = rs.data;
-
-                    // Guardar los nuevos tokens
-                    saveTokens({ token, refreshToken });
-
+                    const token = await refreshAccessToken();
                     instance.defaults.headers.common["Authorization"] = 'Bearer ' + token;
                     return instance(originalConfig);
                 } catch (_error) {
@@ -59,5 +56,23 @@ instance.interceptors.response.use(
     }
 );
 
+const refreshAccessToken = async () => {
+    try {
+        const response = await axios.get("https://graph.facebook.com/v20.0/oauth/access_token", {
+            params: {
+                grant_type: "fb_exchange_token",
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                fb_exchange_token: GRAPH_API_TOKEN,
+            },
+        });
+
+        const newAccessToken = response.data.access_token;
+        return newAccessToken;
+    } catch (error) {
+        console.error("Error refreshing access token:", error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
 
 module.exports = instance;

@@ -1,13 +1,15 @@
 const axios = require('axios');
+const { bigcommerceURL } = require('../../config/urls.js');
 
+const { BIGCOMMERCE_AUTH_TOKEN } = process.env;
 const getCategories = async () => {
     try {
         const headers = {
-            "X-Auth-Token": "bafiiv1o2el2l6k8drrogyx631p5fig",
+            "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
             "Content-Type": "application/json",
         };
         const respuesta = await axios.get(
-            "https://api.bigcommerce.com/stores/mp2k4phx4c/v3/catalog/categories",
+            `${bigcommerceURL}catalog/categories`,
             { headers }
         );
 

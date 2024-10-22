@@ -3,12 +3,13 @@ const { getCategories } = require('../services/bigcommerce/categoriesService.js'
 const { getProducts } = require('../services/bigcommerce/productService.js');
 const { extractMessage, extractPhoneNumberId, extractTextMessage, trainingAssistant } = require('../utils/util.js');
 const { getUser } = require('../services/poc-api/userService.js');
-const { sendIndividualMessage } = require('../services/whatsapp/sendMessage.js');
+const { sendIndividualMessage } = require('../services/whatsapp/apiWhatsapp.js');
 
 const router = express.Router();
 
-router.get('/', function (req, res, next) {
-    res.send(`Get webhook`);
+router.get('/', async function (req, res, next) {
+
+    res.send('Hello')
 });
 
 router.post('/', async function (req, res, next) {
@@ -17,6 +18,7 @@ router.post('/', async function (req, res, next) {
 
     let categories = await getCategories();
     let products = await getProducts();
+
 
 
     let training = trainingAssistant(categories, products);
@@ -60,6 +62,7 @@ router.post('/', async function (req, res, next) {
             // });
         }
     }
+
 
     res.json({ categories, products });
 });
