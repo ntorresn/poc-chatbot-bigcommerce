@@ -54,6 +54,7 @@ router.post('/', async function (req, res, next) {
 
     console.log('userPhone', userPhone);
     console.log('message : ', message);
+    console.log('phoneNumberId : ', phoneNumberId);
 
     let user = null;
     if (userPhone && message) {
@@ -64,7 +65,7 @@ router.post('/', async function (req, res, next) {
 
 
 
-    if (!user || user.welcome == false) {
+    if ((!user || user.welcome == false) && userPhone) {
         sendIndividualMessage(userPhone, phoneNumberId, "¡Hola! 👋 Bienvenido a Sodimac 🛒\n\nEstamos encantados de ayudarte con tus compras. Puedes escribir:\n1️⃣ Ver productos\n2️⃣ Ver carrito\n3️⃣ Ayuda\n\n¡Estamos aquí para lo que necesites! 😊");
         createUser(userPhone)
     }

@@ -27,7 +27,6 @@ const refreshAccessToken = async () => {
     }
 };
 
-var token = refreshAccessToken();
 
 const sendInteractiveMessage = async (to, sections) => {
     const data = {
@@ -79,26 +78,33 @@ const sendInteractiveMessage = async (to, sections) => {
 };
 
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
-    if (!token) {
-        token = refreshAccessToken();
-    }
+    var token = await refreshAccessToken();
+
+    console.log('\n\n************ token ************');
+    console.log(GRAPH_API_TOKEN);
+    console.log('to', to);
+    console.log('\n\n');
+
+
+
     const data = {
         messaging_product: "whatsapp",
-        to,
+        to: to,
         text: {
             body: bodyText,
         },
     };
+    console.log(data);
 
     try {
-        const response = await instance.post(`${graphURL}${phoneNumberId}/messages`, data, {
+        const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
     } catch (error) {
         console.error("Error sending individual message:", error.response ? error.response.data : error.message);
-        throw error;
     }
+
 };
 
 
