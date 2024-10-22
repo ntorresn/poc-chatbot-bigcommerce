@@ -14,7 +14,7 @@ const trainingAssistant = (categories, products) => {
          .join(", ")}
     
     **Productos disponibles**:
-    ${products.data
+    ${products
          .map(
             (product, index) =>
                `${index + 1}. ${product.name} . ${product.description} . . ${product.imageUrl

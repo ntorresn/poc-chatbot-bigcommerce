@@ -39,7 +39,7 @@ router.post('/', async function (req, res, next) {
     console.log("********************** products *************************************");
     console.log(JSON.stringify(products, null, 6))
 
-    /*
+
 
 
 
@@ -84,7 +84,7 @@ router.post('/', async function (req, res, next) {
             // });
         }
     }
-    */
+
 
     // res.json({ categories, products });
     res.sendStatus(200);
