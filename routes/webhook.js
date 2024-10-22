@@ -6,10 +6,23 @@ const { getUser } = require('../services/poc-api/userService.js');
 const { sendIndividualMessage } = require('../services/whatsapp/apiWhatsapp.js');
 
 const router = express.Router();
+const { WEBHOOK_VERIFY_TOKEN } = process.env;
 
 router.get('/', async function (req, res, next) {
 
-    res.send('Hello')
+    console.log("********************webhook start get***********************")
+    console.dir(req.query, { depth: null, colors: true })
+    console.log("********************webhook end get***********************")
+
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+
+    if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
+        res.status(200).send(challenge);
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 router.post('/', async function (req, res, next) {
