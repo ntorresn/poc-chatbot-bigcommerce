@@ -1,7 +1,33 @@
 const axios = require('axios');
 const instance = require("../../config/axiosInstance");
 const { graphURL } = require("../../config/urls.js");
-const { GRAPH_API_TOKEN } = process.env;
+
+
+const {
+    GRAPH_API_TOKEN,
+    CLIENT_SECRET,
+    CLIENT_ID
+} = process.env;
+const refreshAccessToken = async () => {
+    try {
+        const response = await axios.get("https://graph.facebook.com/v20.0/oauth/access_token", {
+            params: {
+                grant_type: "fb_exchange_token",
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                fb_exchange_token: GRAPH_API_TOKEN,
+            },
+        });
+
+        const newAccessToken = response.data.access_token;
+        return newAccessToken;
+    } catch (error) {
+        console.error("Error refreshing access token:", error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+var token = refreshAccessToken();
 
 const sendInteractiveMessage = async (to, sections) => {
     const data = {
@@ -53,6 +79,9 @@ const sendInteractiveMessage = async (to, sections) => {
 };
 
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
+    if (!token) {
+        token = refreshAccessToken();
+    }
     const data = {
         messaging_product: "whatsapp",
         to,
@@ -63,7 +92,7 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
     try {
         const response = await instance.post(`${graphURL}${phoneNumberId}/messages`, data, {
-            headers: { Authorization: `Bearer ${GRAPH_API_TOKEN}` }
+            headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
     } catch (error) {
