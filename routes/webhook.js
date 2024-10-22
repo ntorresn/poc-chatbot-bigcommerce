@@ -34,10 +34,14 @@ router.post('/', async function (req, res, next) {
     let products = await getProducts();
 
     console.log("********************** categories *************************************");
-    console.log(JSON.stringify(categories, null, 6))
+    // console.log(JSON.stringify(categories, null, 6))
+    console.log(categories.length);
+
 
     console.log("********************** products *************************************");
-    console.log(JSON.stringify(products, null, 6))
+    console.log(products.length);
+
+    // console.log(JSON.stringify(products, null, 6))
 
 
 
