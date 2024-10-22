@@ -32,6 +32,8 @@ router.post('/', async function (req, res, next) {
     let categories = await getCategories();
     let products = await getProducts();
 
+    /*
+
 
 
     let training = trainingAssistant(categories, products);
@@ -75,7 +77,7 @@ router.post('/', async function (req, res, next) {
             // });
         }
     }
-
+    */
 
     res.json({ categories, products });
 });
