@@ -265,6 +265,11 @@ router.post('/', async function (req, res, next) {
                         sendIndividualMessage(userPhone, phoneNumberId, txt);
                     }
                     break;
+
+                default:
+                    sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
+
+                    break;
             }
 
         }
