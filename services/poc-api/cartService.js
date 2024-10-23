@@ -13,6 +13,7 @@ const createCart = async phone => {
         throw error;
     }
 };
+
 const addProductToCart = async (product, userPhone) => {
 
     console.log(`${pocURL}carts/add-product/${product.id}`);
@@ -56,7 +57,6 @@ const removeCart = async (userPhone) => {
     }
 };
 
-
 const getCart = async phone => {
 
     console.log(`${pocURL}carts/${phone}`);
@@ -69,4 +69,22 @@ const getCart = async phone => {
     }
 };
 
-module.exports = { createCart, addProductToCart, removeProductToCart, getCart, removeCart };
+const editarProductCart = async (product, userPhone) => {
+
+
+    try {
+        const respuesta = await axios.put(`${pocURL}carts/edit-product/${product.id}`, {
+            id: product.id,
+            name: product.name,
+            quantity: product.quantity,
+            phone: userPhone,
+            price: product.price
+        });
+        return respuesta.data;
+    } catch (error) {
+        console.error("Error al agregar el carrito", error);
+    }
+};
+
+
+module.exports = { createCart, addProductToCart, removeProductToCart, getCart, removeCart, editarProductCart };

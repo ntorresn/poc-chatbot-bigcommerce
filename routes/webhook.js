@@ -5,7 +5,7 @@ const { createCartBigCommerce } = require('../services/bigcommerce/createCartSer
 const { generateCheckoutBigCommerce } = require('../services/bigcommerce/generateCheckoutService.js');
 const { extractMessage, extractPhoneNumberId, extractTextMessage, trainingAssistant, getProductById, getCartResume } = require('../utils/util.js');
 const { getUser, createUser } = require('../services/poc-api/userService.js');
-const { createCart, addProductToCart, removeProductToCart, getCart, removeCart } = require('../services/poc-api/cartService.js');
+const { createCart, addProductToCart, removeProductToCart, getCart, removeCart, editarProductCart } = require('../services/poc-api/cartService.js');
 const { sendIndividualMessage, sendInteractiveMessage, showProductWithImage, sendConfirmationMessage } = require('../services/whatsapp/apiWhatsapp.js');
 const { sendCompletionsAndQuestion } = require('../services/open-ia/openIaService.js');
 
@@ -13,6 +13,7 @@ const router = express.Router();
 const { WEBHOOK_VERIFY_TOKEN } = process.env;
 
 var idproducto = null
+var idproductoEditar = null
 var categories = []
 var products = []
 var user = null
@@ -127,14 +128,35 @@ router.post('/', async function (req, res, next) {
             }
 
 
-        } else {
+        } if (!isNaN(quantity) && idproductoEditar) {
+            producto = getProductById(products, idproductoEditar)
+            producto.quantity = quantity
+
+
+            if (quantity <= 0) {
+                txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
+                sendIndividualMessage(userPhone, phoneNumberId, txt);
+                console.log("########## Cantidad no permitida  ###########", idproductoEditar);
+            }
+            response = await editarProductCart(producto, userPhone)
+            if (response.status == 'success') {
+                txt = `✅ ${response.message}`;
+                sendIndividualMessage(userPhone, phoneNumberId, txt);
+            } else {
+                txt = `❌ ${response.message}`;
+                sendIndividualMessage(userPhone, phoneNumberId, txt);
+            }
+
+
+        }
+        else {
             // console.log("\n\n\n");
             // console.log("********************** sendCompletionsAndQuestion *************************************");
             let response = await sendCompletionsAndQuestion(training, text)
             response = JSON.parse(response)
             console.log('response', response);
 
-            sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
+            // sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
 
             switch (response.tipoRespuesta) {
                 case "agregarproducto":
@@ -224,6 +246,25 @@ router.post('/', async function (req, res, next) {
                     }
 
                     break;
+
+                case "editarproducto":
+                    console.log("Voy a editar un elemento ...");
+                    var cart = await getCart(userPhone)
+                    if (cart.products.length > 0) {
+                        let rowsSection = cart.products.map(product => {
+                            return {
+                                "id": `editar_${product.id}`,
+                                "title": product.name.length > 24 ? product.name.slice(0, 21) + '...' : product.name
+
+                            }
+                        });
+                        console.log(rowsSection);
+                        sendInteractiveMessage(userPhone, phoneNumberId, rowsSection, 'Eliminar', 'Selecciona el producto', 'Gracias por su preferencia')
+                    } else {
+                        const txt = `❌ No puedes editar productos, el carrito se encuentra vacio`;
+                        sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    }
+                    break;
             }
 
         }
@@ -265,6 +306,18 @@ router.post('/', async function (req, res, next) {
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
                 }
 
+            } else if (message.interactive.list_reply.id.includes("editar")) {
+                idproducto = null
+                idproductoEditar = message.interactive.list_reply.id.split("_")[1]
+                let product = getProductById(products, idproductoEditar)
+
+
+
+                let txt = `Has seleccionado el producto : \n*${product.name}*\n`;
+                await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                await showProductWithImage(userPhone, phoneNumberId, product);
+                txt = `¿Cuál es la nueva cantidad que deseas? :`;
+                await sendIndividualMessage(userPhone, phoneNumberId, txt);
             }
 
         } else if (message.interactive.button_reply) {
