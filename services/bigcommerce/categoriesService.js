@@ -3,8 +3,6 @@ const { bigcommerceURL } = require('../../config/urls.js');
 
 const { BIGCOMMERCE_AUTH_TOKEN } = process.env;
 const getCategories = async () => {
-    console.log('BIGCOMMERCE_AUTH_TOKEN ', BIGCOMMERCE_AUTH_TOKEN);
-    console.log('bigcommerceURL ', bigcommerceURL);
 
     try {
         const headers = {

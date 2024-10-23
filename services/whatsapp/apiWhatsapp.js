@@ -28,53 +28,59 @@ const refreshAccessToken = async () => {
 };
 
 
-const sendInteractiveMessage = async (to, sections) => {
-    const data = {
-        messaging_product: "whatsapp",
-        to,
-        type: "interactive",
-        interactive: {
-            type: "list",
-            header: {
-                type: "text",
-                text: "Seleccione una opción"
+const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText, bodyText, footerText) => {
+    var token = await refreshAccessToken();
+    const axios = require('axios');
+    let data = JSON.stringify({
+        "messaging_product": "whatsapp",
+        "to": to,
+        "type": "interactive",
+        "interactive": {
+            "type": "list",
+            "header": {
+                "type": "text",
+                "text": headerText
             },
-            body: {
-                text: "Elija una opción de la lista:"
+            "body": {
+                "text": bodyText
             },
-            footer: {
-                text: "Gracias por su preferencia"
+            "footer": {
+                "text": "Gracias por su preferencia"
             },
-            action: {
-                button: "Ver opciones",
-                sections: sections || [
+            "action": {
+                "button": "Ver opciones",
+                "sections": [
                     {
-                        title: "Opciones",
-                        rows: [
-                            {
-                                id: "opcion_1",
-                                title: "Opción 1"
-                            },
-                            {
-                                id: "opcion_2",
-                                title: "Opción 2"
-                            }
-                        ]
+                        "title": "Opciones",
+                        "rows": rowsSection
+
                     }
                 ]
             }
         }
+    });
+
+
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `https://graph.facebook.com/v20.0/${phoneNumberId}/messages`,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        data: data
     };
 
-    try {
-        const response = await axios.post(`https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`, data, {
-            headers: { Authorization: `Bearer ${GRAPH_API_TOKEN}` }
+    axios.request(config)
+        .then((response) => {
+            console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+            console.error(error.response ? error.response.data : error.message);
+
         });
-        return response.data;
-    } catch (error) {
-        console.error("Error sending interactive message:", error.response ? error.response.data : error.message);
-        throw error;
-    }
+
 };
 
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
@@ -108,9 +114,108 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 };
 
 
+const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
+    var token = await refreshAccessToken();
+
+    console.log('\n\n************ token ************');
+    console.log(GRAPH_API_TOKEN);
+    console.log('to', to);
+    console.log('\n\n');
+
+
+
+    const data = {
+        messaging_product: "whatsapp",
+
+
+        "recipient_type": "individual",
+        "to": to,  // Reemplaza con el número de teléfono del destinatario
+        "type": "interactive",
+        "interactive": {
+            "type": "button",
+            "header": {
+                "type": "text",
+                "text": "Confirmación"
+            },
+            "body": {
+                "text": "¿Estás seguro de que deseas continuar?"
+            },
+            "footer": {
+                "text": "Elige una opción"
+            },
+            "action": {
+                "buttons": [
+                    {
+                        "type": "reply",
+                        "reply": {
+                            "id": "confirm_yes",  // ID para la opción "Sí"
+                            "title": "Sí"
+                        }
+                    },
+                    {
+                        "type": "reply",
+                        "reply": {
+                            "id": "confirm_no",  // ID para la opción "No"
+                            "title": "No"
+                        }
+                    }
+                ]
+            }
+        }
+
+
+    }
+    console.log(data);
+
+    try {
+        const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error sending confirmation message:", error.response ? error.response.data : error.message);
+    }
+
+};
+const showProductWithImage = async (to, phoneNumberId, product) => {
+    try {
+        const url = `${graphURL}${phoneNumberId}/messages`;
+        const imageData = {
+            messaging_product: "whatsapp",
+            to: to,
+            type: "image",
+            image: {
+                link: product.imageUrl,
+                caption: `*${product.name}*\n💰Precio: ${product.price}\n${product.description.replace(/<\/?p>/g, "")}`,
+            },
+        };
+
+        const response = await axios.post(url, imageData, {
+            headers: {
+                Authorization: `Bearer ${GRAPH_API_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        console.log(
+            "Mensaje con imagen y detalles enviado con éxito:",
+            response.data
+        );
+    } catch (error) {
+        console.error(
+            "Error al enviar el mensaje con imagen y detalles:",
+            error.response ? error.response.data : error.message
+        );
+        throw error;
+    }
+};
+
+
 
 
 module.exports = {
     sendInteractiveMessage,
     sendIndividualMessage,
+    showProductWithImage,
+    sendConfirmationMessage
 };

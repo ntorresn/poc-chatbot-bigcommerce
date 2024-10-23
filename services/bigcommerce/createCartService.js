@@ -1,19 +1,24 @@
-exports.createCart = async (line_items) => {
-    const url = `https://api.bigcommerce.com/stores/mp2k4phx4c/v3/carts`;
+const axios = require('axios');
+const { bigcommerceURL } = require('../../config/urls.js');
+const { BIGCOMMERCE_AUTH_TOKEN } = process.env;
 
+
+const createCartBigCommerce = async (line_items) => {
     const cartData = { line_items };
 
     try {
-        const response = await axios.post(url, cartData, {
+        const response = await axios.post(`${bigcommerceURL}carts`, cartData, {
             headers: {
-                "X-Auth-Token": "bafiiv1o2el2l6k8drrogyx631p5fig",
+                "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
                 "Content-Type": "application/json",
                 Accept: "application/json",
             },
         });
 
         if (response.data.data.id) {
-            getCart(response.data.data.id);
+            console.log('response.data.data.id: ', response.data.data.id);
+            return response.data.data.id
+            // getCart(response.data.data.id);
         }
         //return response.data;
     } catch (error) {
@@ -23,3 +28,5 @@ exports.createCart = async (line_items) => {
         );
     }
 };
+
+module.exports = { createCartBigCommerce };

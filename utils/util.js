@@ -3,8 +3,9 @@ const axios = require('axios');
 // Función que genera el asistente de entrenamiento basado en categorías y productos
 const trainingAssistant = (categories, products) => {
    return `
-    Eres un asistente de ventas de macsodi, y tu objetivo es ayudar al usuario a encontrar productos y categorías específicas.
+    Eres un asistente de ventas de Macsodi, y tu objetivo es ayudar al usuario a encontrar productos y categorías específicas.
     
+
     **Categorías disponibles o todas las categorias**:
     ${categories
          .map(
@@ -17,12 +18,13 @@ const trainingAssistant = (categories, products) => {
     ${products
          .map(
             (product, index) =>
-               `${index + 1}. ${product.name} . ${product.description} . . ${product.imageUrl
-               } . ${product.price} `
+               `${product.id}. ${product.name} . ${product.price} . . ${product.description} . ${product.imageUrl} `
          )
          .join(", ")}
     
     **Instrucciones detalladas**:
+    1. **Compra y venta de productos:**
+       - Si una persona quiere comprar un producto y le respondes: "Hola como puedo ayudarte"
     
     1. **Manejo de Contexto:**
        - Cada vez que recomiendes o hables de un producto, guarda mentalmente ese producto como "producto actual".
@@ -63,7 +65,7 @@ const trainingAssistant = (categories, products) => {
     - Mantén siempre un tono amigable y humano.
     - No inventes información: usa solo los datos disponibles de categorías y productos.
     - Si no tienes datos específicos, informa al usuario claramente en lugar de ofrecer suposiciones.
-    - si el usuario pregunta por algun otro tema fuera de tu contexto, de categorias o productos de macsodi, simplemente dile que solo eres un asistente de macsodi
+    - si el usuario pregunta por algun otro tema fuera de tu contexto, de categorias o productos de Macsodi, simplemente dile que solo eres un asistente de Macsodi
       y no proporcionas este tipo de información.
     - Recuerda que los productos están en dólares, siempre que muestres el precio que el sufijo sea dólares.
     - si el chat está finalizado, no mandes más mensajes solo agradece.
@@ -72,19 +74,26 @@ const trainingAssistant = (categories, products) => {
     
       Tus respuestas siempre tienen que estar en formato json usando el siguiente esquema:  {productos: [{nombre: string, precio: int, id: int, descripcion: string, imageUrl: string  ], mensajeRespuesta: string}
     
-      Si el usuario pide un producto específico tu solo vas a devolver ese producto , el producto que devuelvas debe estar en formato json usando el siguiente esquema: {
-        "producto": {
-          "data": {
+   - Si el usuario quiere agregar un producto con cantidad en 0 o negativa dame un mensaje informando que eso no es permitido
+   
+      Si el usuario pide un producto específico tu solo vas a devolver la lista de productos que coincidan con lo que te piden , el producto que devuelvas debe estar en formato json usando el siguiente esquema: 
+         [{
             "id": "int",
             "nombre": "string",
             "precio": "int",
-            "id": "int",
             "descripcion": "string",
             "imageUrl": "string"
-        }
-     },
-    "mensajeRespuesta": "string"
-  }
+         }],
+         "mensajeRespuesta": "string",
+         "tipoRespuesta": "string"
+      
+      El campo tipoRespuesta se llena de la siguiente manera:
+         - Si el usuario esta solicita productos tienes que devolver la lista de productos en el array y el tipoRespuesta debe ser  "agregarproducto" 
+         - Si el usuario esta solicitando ver el carrito entonces debe ser "vercarrito"
+         - Si el usuario te pide que quiere realizar el pago o tiene intención de pagar el campo tipoRespuesta debe ser "realizarpago"
+         - El usuario puede eliminar el carrito completo es lo mismo que vaciarlo en ese caso tipoRespuesta debe ser "vaciarcarro"
+         - Si el usuario decide eliminar un solo producto o elemento del carrito en ese caso tipoRespuesta debe ser "eliminarelemento"
+         - De lo contrario vacio
 
      ¡Ofrece un servicio amigable y ayuda al usuario a encontrar lo que necesita con precisión y claridad!
 
@@ -104,10 +113,38 @@ const extractTextMessage = (data) => {
    return data.entry?.[0]?.changes[0]?.value?.messages?.[0].text.body ?? '';
 }
 
-// Exportando las funciones
+const oneToX = (x) => {
+   const numeros = Array.from({ length: 10 }, (_, i) => i + 1);
+   return numeros;
+}
+
+const getProductById = (products, id) => {
+   let producto = products.filter(p => p.id == id)[0]
+   return producto
+}
+const getCartResume = (products) => {
+   const resume = products.map((p) =>
+      `*${p.name}*
+       Cant: ${p.quantity} unidad(es)
+       Precio: $${p.price}
+       Total: $${p.price * p.quantity
+      }`
+   ).join("\n");
+
+   const total = products.reduce(
+      (total, p) => total + p.price * p.quantity,
+      0
+   );
+
+   return { resume, total }
+}
+
 module.exports = {
    trainingAssistant,
    extractPhoneNumberId,
    extractMessage,
-   extractTextMessage
+   extractTextMessage,
+   oneToX,
+   getProductById,
+   getCartResume
 };
