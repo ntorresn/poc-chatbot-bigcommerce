@@ -82,6 +82,8 @@ router.post('/', async function (req, res, next) {
     }
 
     if (!user && userPhone) {
+        console.log(".............................................................................");
+
         sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
             🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
