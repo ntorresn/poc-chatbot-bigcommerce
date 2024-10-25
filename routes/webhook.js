@@ -61,6 +61,12 @@ router.post('/', async function (req, res, next) {
     logger.info('phoneNumberId', phoneNumberId);
 
 
+    console.log('userPhone', userPhone);
+    console.log('message', message);
+    console.log('phoneNumberId', phoneNumberId);
+
+
+
 
     if (userPhone && message) {
         user = await getUser(userPhone);
