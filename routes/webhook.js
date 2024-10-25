@@ -73,7 +73,16 @@ router.post('/', async function (req, res, next) {
         logger.info('user', user);
     }
 
-
+    if (!user && userPhone) {
+        sendIndividualMessage(userPhone, phoneNumberId,
+            `¡Hola! 👋 Bienvenido a Macsodi 
+            🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
+            Estan son algunas de las categorias que tenemos disponible para ti: \n
+             ${categories.map((category) => `${category.name.replace(",", "")}\n`)}
+            `);
+        user = await createUser(userPhone)
+        await createStore(userPhone)
+    }
 
 
 
@@ -305,16 +314,7 @@ router.post('/', async function (req, res, next) {
     }
 
 
-    if (!user && userPhone) {
-        sendIndividualMessage(userPhone, phoneNumberId,
-            `¡Hola! 👋 Bienvenido a Macsodi 
-            🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
-            Estan son algunas de las categorias que tenemos disponible para ti: \n
-             ${categories.map((category) => `${category.name.replace(",", "")}\n`)}
-            `);
-        user = await createUser(userPhone)
-        await createStore(userPhone)
-    }
+
 
 
     res.sendStatus(200);
