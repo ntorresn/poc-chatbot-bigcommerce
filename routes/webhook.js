@@ -51,6 +51,10 @@ router.post('/', async function (req, res, next) {
     categories = await getCategories();
     products = await getProducts();
 
+    console.log("*************************************************************************************************");
+
+    console.log('req.body', req.body);
+
     let training = trainingAssistant(categories, products);
     const phoneNumberId = extractPhoneNumberId(req.body);
     const message = extractMessage(req.body) ?? null;
