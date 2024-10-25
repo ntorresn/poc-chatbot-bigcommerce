@@ -86,12 +86,11 @@ const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
     var token = await refreshAccessToken();
 
-    console.log('\n\n************ token ************');
-    console.log(GRAPH_API_TOKEN);
+    console.log('\n\n************ Start send message whatsappp ************');
+    console.log('phoneNumberId', phoneNumberId);
     console.log('to', to);
-    console.log('\n\n');
-
-
+    console.log('bodyText', bodyText);
+    console.log('\n************ End send message whatsappp ************');
 
     const data = {
         messaging_product: "whatsapp",
