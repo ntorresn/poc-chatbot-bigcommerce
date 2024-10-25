@@ -5,6 +5,8 @@ const { getUser, createUser } = require('../services/poc-api/userService.js');
 const { createStore, addProductToStore, removeProductFromStore, getStore, removeStore, editProductStore } = require('../services/poc-api/cartService.js');
 const { sendIndividualMessage, sendInteractiveMessage, showProductWithImage, sendConfirmationMessage, sendImageMessage } = require('../services/whatsapp/apiWhatsapp.js');
 const { sendCompletionsAndQuestion } = require('../services/open-ia/openIaService.js');
+const logger = require('./../utils/logger');
+
 
 const router = express.Router();
 const { WEBHOOK_VERIFY_TOKEN } = process.env;
@@ -54,15 +56,15 @@ router.post('/', async function (req, res, next) {
     const message = extractMessage(req.body) ?? null;
     userPhone = message?.from ?? null;
 
+    logger.info('userPhone', userPhone);
+    logger.info('message', message);
+    logger.info('phoneNumberId', phoneNumberId);
 
-    console.log('userPhone', userPhone);
-    console.log('message : ', message);
-    console.log('phoneNumberId : ', phoneNumberId);
 
 
     if (userPhone && message) {
         user = await getUser(userPhone);
-        console.log('user : ', user);
+        logger.info('user', user);
     }
 
 
@@ -74,6 +76,7 @@ router.post('/', async function (req, res, next) {
         const text = extractTextMessage(req.body);
         var quantity = parseInt(text, 10);
         if (!isNaN(quantity) && idproducto) {
+            logger.info('[Agregar cantidad a producto]', ` quantity: ${quantity}, idproducto: ${idproducto}`);
             loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
             if (quantity <= 0) {
                 const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
@@ -82,19 +85,12 @@ router.post('/', async function (req, res, next) {
                 quantity = 1
             }
 
-            // console.log("**************************************************");
-            // console.log("idproducto => ", idproducto);
-            // console.log("quantity => ", quantity);
 
             let producto = getProductById(products, idproducto)
             producto.quantity = quantity
-
+            logger.info('[Producto encontrado]', producto);
 
             response = await addProductToStore(producto, userPhone)
-
-            console.log(".....................................................");
-            console.log(response);
-
 
             if (response.status == 'success') {
                 const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
@@ -302,12 +298,13 @@ router.post('/', async function (req, res, next) {
 
     }
 
+
     if (!user && userPhone) {
         sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
             🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
             Estan son algunas de las categorias que tenemos disponible para ti: \n
-             ${categories.map((category) => `${category.name}\n`).join(", ")}
+             ${categories.map((category) => `${category.name.replace(",", "")}\n`)}
             `);
         user = await createUser(userPhone)
         await createStore(userPhone)
