@@ -54,6 +54,10 @@ router.post('/', async function (req, res, next) {
     console.log("*************************************************************************************************");
 
     console.log('req.body', req.body);
+    console.log("*************************************************************************************************");
+    console.log(JSON.stringify(req.body, null, 6))
+    console.log("******************************************end*******************************************************");
+
 
     let training = trainingAssistant(categories, products);
     const phoneNumberId = extractPhoneNumberId(req.body);
