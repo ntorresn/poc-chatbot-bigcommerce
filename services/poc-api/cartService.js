@@ -2,7 +2,7 @@ const axios = require('axios');
 const { pocURL } = require('../../config/urls.js');
 
 // Función para obtener un usuario basado en su número de teléfono
-const createCart = async phone => {
+const createStore = async phone => {
 
 
     try {
@@ -14,7 +14,7 @@ const createCart = async phone => {
     }
 };
 
-const addProductToCart = async (product, userPhone) => {
+const addProductToStore = async (product, userPhone) => {
 
     console.log(`${pocURL}carts/add-product/${product.id}`);
 
@@ -32,7 +32,7 @@ const addProductToCart = async (product, userPhone) => {
     }
 };
 
-const removeProductToCart = async (productId, phone) => {
+const removeProductFromStore = async (productId, phone) => {
 
     console.log(`${pocURL}carts/remove-product/${productId}`);
 
@@ -46,7 +46,7 @@ const removeProductToCart = async (productId, phone) => {
     }
 };
 
-const removeCart = async (userPhone) => {
+const removeStore = async (userPhone) => {
 
 
     try {
@@ -57,7 +57,7 @@ const removeCart = async (userPhone) => {
     }
 };
 
-const getCart = async phone => {
+const getStore = async phone => {
 
     console.log(`${pocURL}carts/${phone}`);
 
@@ -69,7 +69,7 @@ const getCart = async phone => {
     }
 };
 
-const editarProductCart = async (product, userPhone) => {
+const editProductStore = async (product, userPhone) => {
 
 
     try {
@@ -87,4 +87,4 @@ const editarProductCart = async (product, userPhone) => {
 };
 
 
-module.exports = { createCart, addProductToCart, removeProductToCart, getCart, removeCart, editarProductCart };
+module.exports = { createStore, addProductToStore, removeProductFromStore, getStore, removeStore, editProductStore };

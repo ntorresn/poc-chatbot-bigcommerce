@@ -177,6 +177,51 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
     }
 
 };
+
+const sendImageMessage = async (to, phoneNumberId, urlImage) => {
+    console.log("\n\n\n\n");
+    console.log("****************************************");
+    console.log("to", to);
+    console.log("phoneNumberId", phoneNumberId);
+    console.log("urlImage", urlImage);
+
+
+
+    try {
+        const url = `${graphURL}${phoneNumberId}/messages`;
+        const imageData = {
+            messaging_product: "whatsapp",
+            to: to,
+            type: "image",
+            image: {
+                link: urlImage,
+                caption: `Cargando ...`,
+            },
+        };
+
+        const response = await axios.post(url, imageData, {
+            headers: {
+                Authorization: `Bearer ${GRAPH_API_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+        });
+        console.log("\n\n\n\n");
+        console.log("****************************************");
+        console.log(response.data);
+
+        console.log(
+            "Mensaje con imagen y detalles enviado con éxito:",
+            response.data
+        );
+    } catch (error) {
+        console.error(
+            "Error al enviar el mensaje con imagen y detalles:",
+            error.response ? error.response.data : error.message
+        );
+        throw error;
+    }
+};
+
 const showProductWithImage = async (to, phoneNumberId, product) => {
     try {
         const url = `${graphURL}${phoneNumberId}/messages`;
@@ -217,5 +262,6 @@ module.exports = {
     sendInteractiveMessage,
     sendIndividualMessage,
     showProductWithImage,
-    sendConfirmationMessage
+    sendConfirmationMessage,
+    sendImageMessage
 };

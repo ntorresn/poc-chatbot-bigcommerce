@@ -73,7 +73,7 @@ const trainingAssistant = (categories, products) => {
       "link para mostrar más detalles"
     
       Tus respuestas siempre tienen que estar en formato json usando el siguiente esquema:  {productos: [{nombre: string, precio: int, id: int, descripcion: string, imageUrl: string  ], mensajeRespuesta: string}
-    
+
    - Si el usuario quiere agregar un producto con cantidad en 0 o negativa dame un mensaje informando que eso no es permitido
 
       Si el usuario pide un producto específico tu solo vas a devolver la lista de productos que coincidan con lo que te piden , el producto que devuelvas debe estar en formato json usando el siguiente esquema: 
@@ -98,6 +98,8 @@ const trainingAssistant = (categories, products) => {
 
      ¡Ofrece un servicio amigable y ayuda al usuario a encontrar lo que necesita con precisión y claridad!
 
+     
+    
     `;
 }
 
