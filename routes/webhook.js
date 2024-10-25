@@ -54,6 +54,12 @@ router.post('/', async function (req, res, next) {
     const message = extractMessage(req.body) ?? null;
     userPhone = message?.from ?? null;
 
+    console.log("..................... start body .....................");
+    console.log(JSON.stringify(req.body, null, 6))
+    console.log("..................... end body .....................");
+
+
+
 
     console.log('userPhone', userPhone);
     console.log('message : ', message);
