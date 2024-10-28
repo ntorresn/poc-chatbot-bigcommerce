@@ -43,6 +43,12 @@ instance.interceptors.response.use(
             logger.error(err.response.status)
             logger.error("!originalConfig._retry : ", !originalConfig._retry)
             logger.error("::::::::::::::::: Interceptor Error End ::::::::::::::::::::::::::::::")
+            if (!originalConfig._retry) {
+                logger.error("::::::::::::::::: Si ::::::::::::::::::::::::::::::")
+            } else {
+                logger.error("::::::::::::::::: No ::::::::::::::::::::::::::::::")
+
+            }
 
             if (err.response.status === 401 && !originalConfig._retry) {
                 logger.error("::::::::::::::::: Refrescar el token ::::::::::::::::::::::::::::::")
