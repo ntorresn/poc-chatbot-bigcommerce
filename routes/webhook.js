@@ -124,7 +124,7 @@ router.post('/', async function (req, res, next) {
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
                     console.log("########## Cantidad no permitida  ###########", idproductoEditar);
                 }
-                response = await editarProductCart(producto, userPhone)
+                response = await editProductStore(producto, userPhone)
                 if (response.status == 'success') {
                     txt = `✅ ${response.message}`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
