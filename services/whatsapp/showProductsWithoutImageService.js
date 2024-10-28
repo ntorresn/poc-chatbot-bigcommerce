@@ -18,7 +18,6 @@ exports.showProductsWithoutImage = async (phoneNumber, business_phone_number_id,
             },
         });
 
-        console.log("Mensaje de texto enviado con éxito:", response.data);
     } catch (error) {
         console.error(
             "Error al enviar el mensaje de texto:",

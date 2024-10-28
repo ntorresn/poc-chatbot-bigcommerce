@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { bigcommerceURL, bigcommerceUrlImages } = require('../../config/urls.js');
+const logger = require('../../utils/logger.js');
 
 const { BIGCOMMERCE_AUTH_TOKEN } = process.env;
 const getCategories = async () => {
@@ -39,7 +40,7 @@ const createCart = async (line_items) => {
         });
 
         if (response.data.data.id) {
-            console.log('response.data.data.id: ', response.data.data.id);
+            logger.info('BIGCOMMERCE RESPONSE createCart : ', response.data.data.id);
             return response.data.data.id
             // getCart(response.data.data.id);
         }

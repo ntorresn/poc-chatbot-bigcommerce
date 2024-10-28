@@ -18,7 +18,7 @@ exports.showProductWithImage = async (phoneNumber, business_phone_number_id, ima
             },
         });
 
-        console.log(
+        logger.info(
             "Mensaje con imagen y detalles enviado con éxito:",
             response.data
         );

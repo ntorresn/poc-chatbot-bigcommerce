@@ -3,8 +3,6 @@ const { pocURL } = require('../../config/urls.js');
 
 // Función para obtener un usuario basado en su número de teléfono
 const getUser = async (phone) => {
-    console.log('pocAPI', pocURL);
-    console.log('phone', phone);
 
     try {
         const respuesta = await axios.get(`${pocURL}users/${phone}`);
@@ -16,7 +14,6 @@ const getUser = async (phone) => {
 };
 const createUser = async (phone) => {
 
-    console.log(`${pocURL}users/${phone}`);
 
     try {
         const respuesta = await axios.post(`${pocURL}users`, {

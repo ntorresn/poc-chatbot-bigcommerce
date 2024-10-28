@@ -16,7 +16,6 @@ const createStore = async phone => {
 
 const addProductToStore = async (product, userPhone) => {
 
-    console.log(`${pocURL}carts/add-product/${product.id}`);
 
     try {
         const respuesta = await axios.put(`${pocURL}carts/add-product/${product.id}`, {
@@ -34,7 +33,6 @@ const addProductToStore = async (product, userPhone) => {
 
 const removeProductFromStore = async (productId, phone) => {
 
-    console.log(`${pocURL}carts/remove-product/${productId}`);
 
     try {
         const respuesta = await axios.put(`${pocURL}carts/remove-product/${productId}`, {
@@ -58,8 +56,6 @@ const removeStore = async (userPhone) => {
 };
 
 const getStore = async phone => {
-
-    console.log(`${pocURL}carts/${phone}`);
 
     try {
         const respuesta = await axios.get(`${pocURL}carts/${phone}`);

@@ -5,6 +5,7 @@ const { getUser, createUser } = require('../services/poc-api/userService.js');
 const { createStore, addProductToStore, removeProductFromStore, getStore, removeStore, editProductStore } = require('../services/poc-api/cartService.js');
 const { sendIndividualMessage, sendInteractiveMessage, showProductWithImage, sendConfirmationMessage, sendImageMessage } = require('../services/whatsapp/apiWhatsapp.js');
 const { sendCompletionsAndQuestion } = require('../services/open-ia/openIaService.js');
+const logger = require('./../utils/logger');
 
 const router = express.Router();
 const { WEBHOOK_VERIFY_TOKEN } = process.env
@@ -14,6 +15,7 @@ var idproductoEditar = null
 var categories = []
 var products = []
 var user = null
+var userPhone = null
 
 router.post('/test-ia', async function (req, res, next) {
     let categories = await getCategories()
@@ -28,9 +30,9 @@ router.post('/test-ia', async function (req, res, next) {
 
 router.get('/', async function (req, res, next) {
 
-    console.log("********************webhook start get***********************")
-    console.dir(req.query, { depth: null, colors: true })
-    console.log("********************webhook end get***********************")
+    logger.info("******************** webhook GET start ***********************")
+    logger.info(req.query, { depth: null, colors: true })
+    logger.info("********************webhook GET end ***********************")
 
     const mode = req.query["hub.mode"]
     const token = req.query["hub.verify_token"]
@@ -48,10 +50,10 @@ router.post('/', async function (req, res, next) {
 
 
 
-    console.log("..................... start getMessageKey .....................")
+    logger.info("..................... start getMessageKey .....................")
     let ress = getMessageKey(req.body)
-    console.log('ress: ', ress)
-    console.log("..................... start getMessageKey .....................")
+    logger.info('ress: ', ress)
+    logger.info("..................... start getMessageKey .....................")
 
 
     if (getMessageKey(req.body)) {
@@ -64,46 +66,38 @@ router.post('/', async function (req, res, next) {
         const message = extractMessage(req.body) ?? null
         userPhone = message?.from ?? null;
 
-        console.log("..................... start body .....................")
-        console.log(JSON.stringify(req.body, null, 6))
-        console.log("..................... end body .....................")
+        logger.info("..................... start body .....................")
+        logger.info(JSON.stringify(req.body, null, 6))
+        logger.info("..................... end body .....................")
 
-        console.log('userPhone', userPhone)
-        console.log('message : ', message)
-        console.log('phoneNumberId : ', phoneNumberId)
+        logger.info('userPhone', userPhone)
+        logger.info('message : ', message)
+        logger.info('phoneNumberId : ', phoneNumberId)
 
 
         if (userPhone && message) {
             user = await getUser(userPhone)
-            console.log('user : ', user)
+            logger.info('user : ', user)
         }
         if (message.type === "text" && user) {
 
             const text = extractTextMessage(req.body);
             var quantity = parseInt(text, 10);
             if (!isNaN(quantity) && idproducto) {
+                logger.info('!isNaN(quantity) && idproducto => quantity = ', quantity, ' idproducto = ', idproducto)
                 loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
-                    console.log("########## Cantidad no permitida ###########", idproducto);
+                    logger.info("########## Cantidad no permitida ###########", idproducto);
                     quantity = 1
                 }
-
-                // console.log("**************************************************");
-                // console.log("idproducto => ", idproducto);
-                // console.log("quantity => ", quantity);
 
                 let producto = getProductById(products, idproducto)
                 producto.quantity = quantity
 
 
                 response = await addProductToStore(producto, userPhone)
-
-                console.log(".....................................................");
-                console.log(response);
-
-
                 if (response.status == 'success') {
                     const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
@@ -111,7 +105,6 @@ router.post('/', async function (req, res, next) {
                     const txt = `❌ ${response.message}`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
                 }
-
 
             } if (!isNaN(quantity) && idproductoEditar) {
                 loading(userPhone, phoneNumberId, 'Por favor espera estamos editando el producto ⏳...');
@@ -122,7 +115,7 @@ router.post('/', async function (req, res, next) {
                 if (quantity <= 0) {
                     txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
-                    console.log("########## Cantidad no permitida  ###########", idproductoEditar);
+                    logger.error("########## Cantidad no permitida  ###########", idproductoEditar);
                 }
                 response = await editProductStore(producto, userPhone)
                 if (response.status == 'success') {
@@ -136,11 +129,11 @@ router.post('/', async function (req, res, next) {
 
             }
             else {
-                // console.log("\n\n\n");
-                console.log("********************** sendCompletionsAndQuestion *************************************");
+                logger.info("********************** start ia *************************************");
                 let response = await sendCompletionsAndQuestion(training, text)
                 response = JSON.parse(response)
-                console.log('response', response);
+                logger.info('response ia: ', response);
+                logger.info("********************** end ia *************************************");
 
                 // sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
 
@@ -157,15 +150,11 @@ router.post('/', async function (req, res, next) {
 
                                     }
                                 });
-                                console.log(rowsSection);
-
-
                                 sendInteractiveMessage(userPhone, phoneNumberId, rowsSection, 'Bienvenido', 'Selecciona un producto para continuar', 'Gracias por su preferencia')
                             }
                             break;
                         case "vercarrito":
                             loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
-                            console.log(userPhone);
 
 
                             var cart = await getStore(userPhone)
@@ -178,7 +167,6 @@ router.post('/', async function (req, res, next) {
                                 txt = `🟡 No has registrado productos en el carrito de compras `,
                                     sendIndividualMessage(userPhone, phoneNumberId, txt);
                             }
-                            console.log(cart);
 
                             break;
 
@@ -193,8 +181,6 @@ router.post('/', async function (req, res, next) {
                                     product_id: product.id
                                 };
                             });
-
-                            console.log('line_items', line_items);
 
 
                             if (line_items.length > 0) {
@@ -321,6 +307,7 @@ router.post('/', async function (req, res, next) {
     const phoneNumberId = extractPhoneNumberId(req.body)
     const message = extractMessage(req.body) ?? null
     userPhone = message?.from ?? null;
+    logger.info("::::: userInfo ", userPhone, " message ", message)
 
     if (!user && userPhone) {
         sendIndividualMessage(userPhone, phoneNumberId,

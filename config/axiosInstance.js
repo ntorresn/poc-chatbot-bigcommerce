@@ -1,13 +1,17 @@
 const axios = require('axios');
 const { graphURL } = require('./urls');
 const fs = require('fs');
-
+const logger = require('./../utils/logger');
 
 const {
     GRAPH_API_TOKEN,
     CLIENT_SECRET,
     CLIENT_ID
 } = process.env;
+
+var token = GRAPH_API_TOKEN
+
+
 const instance = axios.create({
     baseURL: graphURL,
     headers: {
@@ -17,7 +21,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
-        const token = refreshAccessToken();
+        token = refreshAccessToken();
         if (token) {
             config.headers["Authorization"] = 'Bearer ' + token;
         }
@@ -35,10 +39,15 @@ instance.interceptors.response.use(
     async (err) => {
         const originalConfig = err.config;
         if (err.response) {
+            logger.error("::::::::::::::::: Interceptor Error Start ::::::::::::::::::::::::::::::")
+            logger.error(JSON.stringify(err.response, null, 6))
+            logger.error("!originalConfig._retry : ", !originalConfig._retry)
+            logger.error("::::::::::::::::: Interceptor Error End ::::::::::::::::::::::::::::::")
+
             if (err.response.status === 401 && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
-                    const token = await refreshAccessToken();
+                    token = await refreshAccessToken();
                     instance.defaults.headers.common["Authorization"] = 'Bearer ' + token;
                     return instance(originalConfig);
                 } catch (_error) {
@@ -75,4 +84,4 @@ const refreshAccessToken = async () => {
     }
 };
 
-module.exports = instance;
+module.exports = { instance, token };
