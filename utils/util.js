@@ -121,6 +121,9 @@ const oneToX = (x) => {
    return numeros;
 }
 
+const getMessageKey = data => {
+   return data.entry[0].changes[0].value.hasOwnProperty("messages");
+}
 const getProductById = (products, id) => {
    let producto = products.filter(p => p.id == id)[0]
    return producto
@@ -149,5 +152,6 @@ module.exports = {
    extractTextMessage,
    oneToX,
    getProductById,
-   getCartResume
+   getCartResume,
+   getMessageKey
 };
