@@ -30,9 +30,9 @@ router.post('/test-ia', async function (req, res, next) {
 
 router.get('/', async function (req, res, next) {
 
-    logger.info("******************** webhook GET start ***********************")
-    logger.info(req.query, { depth: null, colors: true })
-    logger.info("********************webhook GET end ***********************")
+    console.log("******************** webhook GET start ***********************")
+    console.log(req.query, { depth: null, colors: true })
+    console.log("********************webhook GET end ***********************")
 
     const mode = req.query["hub.mode"]
     const token = req.query["hub.verify_token"]
@@ -50,10 +50,10 @@ router.post('/', async function (req, res, next) {
 
 
 
-    logger.info("..................... start getMessageKey .....................")
+    console.log("..................... start getMessageKey .....................")
     let ress = getMessageKey(req.body)
-    logger.info('ress: ', ress)
-    logger.info("..................... start getMessageKey .....................")
+    console.log('ress: ', ress)
+    console.log("..................... start getMessageKey .....................")
 
 
     if (getMessageKey(req.body)) {
@@ -66,38 +66,42 @@ router.post('/', async function (req, res, next) {
         const message = extractMessage(req.body) ?? null
         userPhone = message?.from ?? null;
 
-        logger.info("..................... start body .....................")
-        logger.info(JSON.stringify(req.body, null, 6))
-        logger.info("..................... end body .....................")
+        console.log("..................... start body .....................")
+        console.log(JSON.stringify(req.body, null, 6))
+        console.log("..................... end body .....................")
 
-        logger.info('userPhone', userPhone)
-        logger.info('message : ', message)
-        logger.info('phoneNumberId : ', phoneNumberId)
+        console.log('userPhone', userPhone)
+        console.log('message : ', message)
+        console.log('phoneNumberId : ', phoneNumberId)
 
 
         if (userPhone && message) {
             user = await getUser(userPhone)
-            logger.info('user : ', user)
+            console.log('user : ', user)
         }
         if (message.type === "text" && user) {
 
             const text = extractTextMessage(req.body);
             var quantity = parseInt(text, 10);
             if (!isNaN(quantity) && idproducto) {
-                logger.info('!isNaN(quantity) && idproducto => quantity = ', quantity, ' idproducto = ', idproducto)
+                console.log('!isNaN(quantity) && idproducto => quantity = ', quantity, ' idproducto = ', idproducto)
                 await loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
-                    logger.info("########## Cantidad no permitida ###########", idproducto);
+                    console.log("########## Cantidad no permitida ###########", idproducto);
                     quantity = 1
                 }
 
                 let producto = getProductById(products, idproducto)
                 producto.quantity = quantity
+                console.log('producto', producto)
 
 
                 response = await addProductToStore(producto, userPhone)
+
+                console.log('response ', response)
+
                 if (response.status == 'success') {
                     const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
@@ -129,11 +133,11 @@ router.post('/', async function (req, res, next) {
 
             }
             else {
-                logger.info("********************** start ia *************************************");
+                console.log("********************** start ia *************************************");
                 let response = await sendCompletionsAndQuestion(training, text)
                 response = JSON.parse(response)
-                logger.info('response ia: ', response);
-                logger.info("********************** end ia *************************************");
+                console.log('response ia: ', response);
+                console.log("********************** end ia *************************************");
 
                 // sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
 
@@ -307,7 +311,7 @@ router.post('/', async function (req, res, next) {
     const phoneNumberId = extractPhoneNumberId(req.body)
     const message = extractMessage(req.body) ?? null
     userPhone = message?.from ?? null;
-    logger.info("::::: userInfo ", userPhone, " message ", message)
+    console.log("::::: userInfo ", userPhone, " message ", message)
 
     if (!user && userPhone) {
         sendIndividualMessage(userPhone, phoneNumberId,
