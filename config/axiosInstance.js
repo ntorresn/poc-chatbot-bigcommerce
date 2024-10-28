@@ -40,7 +40,7 @@ instance.interceptors.response.use(
         const originalConfig = err.config;
         if (err.response) {
             logger.error("::::::::::::::::: Interceptor Error Start ::::::::::::::::::::::::::::::")
-            logger.error(JSON.stringify(err.response, null, 6))
+            logger.error(err.response.status)
             logger.error("!originalConfig._retry : ", !originalConfig._retry)
             logger.error("::::::::::::::::: Interceptor Error End ::::::::::::::::::::::::::::::")
 
