@@ -62,8 +62,8 @@ router.post('/', async function (req, res, next) {
 
 
         let training = trainingAssistant(categories, products)
-        const phoneNumberId = extractPhoneNumberId(req.body)
-        const message = extractMessage(req.body) ?? null
+        var phoneNumberId = extractPhoneNumberId(req.body)
+        var message = extractMessage(req.body) ?? null
         userPhone = message?.from ?? null;
 
         console.log("..................... start body .....................")
