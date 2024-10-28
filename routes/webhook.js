@@ -318,6 +318,10 @@ router.post('/', async function (req, res, next) {
     }
 
 
+    const phoneNumberId = extractPhoneNumberId(req.body)
+    const message = extractMessage(req.body) ?? null
+    userPhone = message?.from ?? null;
+
     if (!user && userPhone) {
         sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
