@@ -45,9 +45,13 @@ instance.interceptors.response.use(
             logger.error("::::::::::::::::: Interceptor Error End ::::::::::::::::::::::::::::::")
 
             if (err.response.status === 401 && !originalConfig._retry) {
+                logger.error("::::::::::::::::: Refrescar el token ::::::::::::::::::::::::::::::")
+
                 originalConfig._retry = true;
                 try {
                     token = await refreshAccessToken();
+                    logger.error(`::::::::::::::::: ${token} ::::::::::::::::::::::::::::::`)
+
                     instance.defaults.headers.common["Authorization"] = 'Bearer ' + token;
                     return instance(originalConfig);
                 } catch (_error) {
