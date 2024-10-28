@@ -312,8 +312,8 @@ router.post('/', async function (req, res, next) {
     }
 
 
-    const phoneNumberId = extractPhoneNumberId(req.body)
-    const message = extractMessage(req.body) ?? null
+    phoneNumberId = extractPhoneNumberId(req.body)
+    message = extractMessage(req.body) ?? null
     userPhone = message?.from ?? null;
     console.log("::::: userInfo ", userPhone, " message ", message)
 
