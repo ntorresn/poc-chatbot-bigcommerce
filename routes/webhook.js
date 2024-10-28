@@ -137,7 +137,6 @@ router.post('/', async function (req, res, next) {
             }
             else {
                 // console.log("\n\n\n");
-                loading(userPhone, phoneNumberId, 'Cargando por favor espera ⏳...');
                 console.log("********************** sendCompletionsAndQuestion *************************************");
                 let response = await sendCompletionsAndQuestion(training, text)
                 response = JSON.parse(response)
@@ -148,6 +147,8 @@ router.post('/', async function (req, res, next) {
                 if (response.tipoRespuesta) {
                     switch (response.tipoRespuesta) {
                         case "agregarproducto":
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
+
                             if (response.productos.length > 0) {
                                 let rowsSection = response.productos.map(producto => {
                                     return {
@@ -163,7 +164,7 @@ router.post('/', async function (req, res, next) {
                             }
                             break;
                         case "vercarrito":
-                            console.log("Voy a ver el carrito....");
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                             console.log(userPhone);
 
 
@@ -182,6 +183,7 @@ router.post('/', async function (req, res, next) {
                             break;
 
                         case "realizarpago":
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                             var cart = await getStore(userPhone)
 
 
@@ -207,11 +209,12 @@ router.post('/', async function (req, res, next) {
                             break;
 
                         case "vaciarcarro":
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                             sendConfirmationMessage(userPhone, phoneNumberId, "hello")
                             break;
 
                         case "eliminarelemento":
-
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                             var cart = await getStore(userPhone)
                             if (cart.products.length > 0) {
                                 let rowsSection = cart.products.map(product => {
@@ -230,6 +233,7 @@ router.post('/', async function (req, res, next) {
                             break;
 
                         case "editarproducto":
+                            loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                             var cart = await getStore(userPhone)
                             if (cart.products.length > 0) {
                                 let rowsSection = cart.products.map(product => {
@@ -260,6 +264,7 @@ router.post('/', async function (req, res, next) {
         else if (message.type == 'interactive' && user) {
 
             if (message.interactive.list_reply) {
+                loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                 message.interactive.list_reply
                 if (message.interactive.list_reply.id.includes("producto")) {
                     idproducto = message.interactive.list_reply.id.split("_")[1]
@@ -295,6 +300,7 @@ router.post('/', async function (req, res, next) {
                 }
 
             } else if (message.interactive.button_reply) {
+                loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
                 id = message.interactive.button_reply.id
                 if (id == 'confirm_yes') {
                     response = await removeStore(userPhone)
