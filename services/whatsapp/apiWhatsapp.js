@@ -1,8 +1,7 @@
 const axios = require('axios');
-const { instance, token } = require("../../config/axiosInstance");
+// const { instance, token } = require("../../config/axiosInstance");
 const { graphURL } = require("../../config/urls.js");
 const logger = require('./../../utils/logger');
-
 
 const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText, bodyText, footerText) => {
 
@@ -12,7 +11,7 @@ const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText
     logger.info("bodyText: ", bodyText);
     logger.info("************** end  sendIndividualMessage **************************");
 
-    // var token = await refreshAccessToken();
+    var token = await refreshAccessToken();
     const axios = require('axios');
     let data = JSON.stringify({
         messaging_product: "whatsapp",
@@ -68,6 +67,8 @@ const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText
 
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
+    var token = await refreshAccessToken();
+
     logger.info("************** start sendIndividualMessage **************************");
     logger.info("to: ", to);
     logger.info("phoneNumberId: ", phoneNumberId);
@@ -85,7 +86,7 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
     };
 
     try {
-        const response = await instance.post(`${graphURL}${phoneNumberId}/messages`, data, {
+        const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -97,7 +98,7 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
 
 const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
-    // var token = await refreshAccessToken();
+    var token = await refreshAccessToken();
 
     logger.info("************** start sendConfirmationMessage **************************");
     logger.info("to: ", to);
@@ -148,7 +149,7 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
     }
 
     try {
-        const response = await instance.post(`${graphURL}${phoneNumberId}/messages`, data, {
+        const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -165,7 +166,7 @@ const sendImageMessage = async (to, phoneNumberId, urlImage) => {
     logger.info("urlImage", urlImage);
     logger.info("************** end sendImageMessage **************************");
 
-
+    var token = await refreshAccessToken();
 
     try {
         const url = `${graphURL}${phoneNumberId}/messages`;
@@ -179,7 +180,7 @@ const sendImageMessage = async (to, phoneNumberId, urlImage) => {
             },
         };
 
-        const response = await instance.post(url, imageData, {
+        const response = await axios.post(url, imageData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -206,7 +207,7 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
     logger.info("phoneNumberId", phoneNumberId);
     logger.info("product", product);
     logger.info("************** end showProductWithImage **************************");
-
+    var token = await refreshAccessToken();
 
     try {
         const url = `${graphURL}${phoneNumberId}/messages`;
@@ -220,7 +221,7 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
             },
         };
 
-        const response = await instance.post(url, imageData, {
+        const response = await axios.post(url, imageData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -239,6 +240,26 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
         throw error;
     }
 };
+
+const refreshAccessToken = async () => {
+    try {
+        const response = await axios.get("https://graph.facebook.com/v20.0/oauth/access_token", {
+            params: {
+                grant_type: "fb_exchange_token",
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                fb_exchange_token: GRAPH_API_TOKEN,
+            },
+        });
+
+        const newAccessToken = response.data.access_token;
+        return newAccessToken;
+    } catch (error) {
+        console.error("Error refreshing access token:", error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
 
 
 
