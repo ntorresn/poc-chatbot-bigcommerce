@@ -15,20 +15,22 @@ const createStore = async phone => {
 };
 
 const addProductToStore = async (product, userPhone) => {
+    return new Promise(async (resolve, reject) => {
 
-
-    try {
-        const respuesta = await axios.put(`${pocURL}carts/add-product/${product.id}`, {
-            id: product.id,
-            name: product.name,
-            quantity: product.quantity,
-            phone: userPhone,
-            price: product.price
-        });
-        return respuesta.data;
-    } catch (error) {
-        console.error("Error al agregar el carrito", error);
-    }
+        try {
+            const respuesta = await axios.put(`${pocURL}carts/add-product/${product.id}`, {
+                id: product.id,
+                name: product.name,
+                quantity: product.quantity,
+                phone: userPhone,
+                price: product.price
+            });
+            resolve(respuesta.data);
+        } catch (error) {
+            reject("Error al agregar el carrito", error)
+            console.error("Error al agregar el carrito", error);
+        }
+    })
 };
 
 const removeProductFromStore = async (productId, phone) => {
