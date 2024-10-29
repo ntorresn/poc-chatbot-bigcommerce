@@ -89,7 +89,7 @@ router.post('/', async function (req, res, next) {
             var quantity = parseInt(text, 10);
             if (!isNaN(quantity) && idproducto) {
                 console.log('!isNaN(quantity) && idproducto => quantity = ', quantity, ' idproducto = ', idproducto)
-                await loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
+                loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     sendIndividualMessage(userPhone, phoneNumberId, txt);
@@ -340,6 +340,6 @@ router.post('/', async function (req, res, next) {
 })
 
 const loading = async (to, phoneNumberId, text) => {
-    await sendIndividualMessage(to, phoneNumberId, text)
+    sendIndividualMessage(to, phoneNumberId, text)
 }
 module.exports = router;
