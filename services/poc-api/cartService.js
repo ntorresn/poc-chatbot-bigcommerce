@@ -27,7 +27,6 @@ const addProductToStore = async (product, userPhone) => {
             });
             resolve(respuesta.data);
         } catch (error) {
-            reject("Error al agregar el carrito", error)
             console.error("Error al agregar el carrito", error);
         }
     })
