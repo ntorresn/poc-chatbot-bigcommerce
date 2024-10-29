@@ -270,10 +270,10 @@ router.post('/', async function (req, res, next) {
                     let product = getProductById(products, idproducto)
 
                     let txt = `Has seleccionado el producto: \n*${product.name}*\n`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    // await sendIndividualMessage(userPhone, phoneNumberId, txt);
                     await showProductWithImage(userPhone, phoneNumberId, product);
                     txt = `¿Cuál es la cantidad que deseas? :`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    // await sendIndividualMessage(userPhone, phoneNumberId, txt);
                 } else if (message.interactive.list_reply.id.includes("eliminar")) {
                     idproducto = message.interactive.list_reply.id.split("_")[1]
                     response = await removeProductFromStore(idproducto, userPhone)
