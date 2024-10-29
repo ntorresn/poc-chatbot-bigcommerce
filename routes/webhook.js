@@ -92,7 +92,7 @@ router.post('/', async function (req, res, next) {
                 await loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     console.log("########## Cantidad no permitida ###########", idproducto);
                     quantity = 1
                 }
@@ -108,10 +108,10 @@ router.post('/', async function (req, res, next) {
 
                 if (response.status == 'success') {
                     const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 } else {
                     const txt = `❌ ${response.message}`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 }
 
             } if (!isNaN(quantity) && idproductoEditar) {
@@ -122,16 +122,16 @@ router.post('/', async function (req, res, next) {
 
                 if (quantity <= 0) {
                     txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     logger.error("########## Cantidad no permitida  ###########", idproductoEditar);
                 }
                 response = await editProductStore(producto, userPhone)
                 if (response.status == 'success') {
                     txt = `✅ ${response.message}`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 } else {
                     txt = `❌ ${response.message}`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 }
 
 
@@ -158,7 +158,7 @@ router.post('/', async function (req, res, next) {
 
                                     }
                                 });
-                                sendInteractiveMessage(userPhone, phoneNumberId, rowsSection, 'Bienvenido', 'Selecciona un producto para continuar', 'Gracias por su preferencia')
+                                sendInteractiveMessage(userPhone, phoneNumberId, rowsSection, 'Agregar producto', 'Selecciona un producto para continuar', 'Gracias por su preferencia')
                             }
                             break;
                         case "vercarrito":
@@ -170,10 +170,10 @@ router.post('/', async function (req, res, next) {
                             if (cart.products.length > 0) {
                                 let { resume, total } = getCartResume(cart.products)
                                 txt = `Resumen de compra:\n\n${resume}\n\n💰 *Total de la compra:* $${total} \n\n Deseas realizar el pago`
-                                await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                                await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                             } else {
                                 txt = `🟡 No has registrado productos en el carrito de compras `,
-                                    await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                             }
 
                             break;
@@ -195,7 +195,7 @@ router.post('/', async function (req, res, next) {
                                 let idcart = await createCart(line_items);
                                 let response = await generateCheckout(idcart)
                                 txt = `Para continuar con tu compra, ingresa al siguiente 🌐 link: 💰 ${response.embedded_checkout_url}`
-                                await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                                await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
 
                             }
 
@@ -204,7 +204,7 @@ router.post('/', async function (req, res, next) {
 
                         case "vaciarcarro":
                             await loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
-                            sendConfirmationMessage(userPhone, phoneNumberId, "hello")
+                            sendConfirmationMessage(userPhone, phoneNumberId, "hello", message)
                             break;
 
                         case "eliminarelemento":
@@ -221,7 +221,7 @@ router.post('/', async function (req, res, next) {
                                 sendInteractiveMessage(userPhone, phoneNumberId, rowsSection, 'Eliminar', 'Selecciona el producto a eliminar', 'Gracias por su preferencia')
                             } else {
                                 const txt = `❌ No puedes eliminar elementos, el carrito se encuentra vacio`;
-                                await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                                await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                             }
 
                             break;
@@ -248,14 +248,14 @@ router.post('/', async function (req, res, next) {
                             if (response.categorias) {
                                 const categoriasTexto = response.categorias.join('\n');
                                 txt = `${response.mensasjeRespuesta}\n\n ${categoriasTexto} `
-                                await sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto);
+                                await sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto, message);
                             }
                             break;
 
 
                     }
                 } else {
-                    await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
+                    await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
                 }
             }
 
@@ -280,10 +280,10 @@ router.post('/', async function (req, res, next) {
 
                     if (response.status == 'success') {
                         txt = `✅ El producto fue eliminado exitosamente`
-                        await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     } else {
                         txt = `❌ No se pudo eliminar el producto`
-                        await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     }
 
                 } else if (message.interactive.list_reply.id.includes("editar")) {
@@ -292,10 +292,10 @@ router.post('/', async function (req, res, next) {
                     let product = getProductById(products, idproductoEditar)
 
                     let txt = `Has seleccionado el producto : \n*${product.name}*\n`;
-                    await await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     await showProductWithImage(userPhone, phoneNumberId, product);
                     txt = `¿Cuál es la nueva cantidad que deseas? :`;
-                    await await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                    await await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 }
 
             } else if (message.interactive.button_reply) {
@@ -305,10 +305,10 @@ router.post('/', async function (req, res, next) {
                     response = await removeStore(userPhone)
                     if (response.status == 'success') {
                         txt = `✅ El carrito fue eliminado exitosamente`
-                        await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     } else {
                         txt = `❌ No se pudo eliminar el carrito de compras`
-                        await sendIndividualMessage(userPhone, phoneNumberId, txt);
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     }
                 }
             }
@@ -327,7 +327,7 @@ router.post('/', async function (req, res, next) {
             `¡Hola! 👋 Bienvenido a Macsodi 
             🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
             Estan son algunas de las categorias que tenemos disponible para ti: \n
-             ${categories.map((category) => `${category.name}\n`).join(", ")}
+             ${categories.map((category) => `${category.name}\n`).join(", "), message}
             `);
         user = await createUser(userPhone)
         await createStore(userPhone)
@@ -342,7 +342,7 @@ router.post('/', async function (req, res, next) {
 const loading = async (to, phoneNumberId, text) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await sendIndividualMessage(to, phoneNumberId, text)
+            let data = await sendIndividualMessage(to, phoneNumberId, text, null)
             resolve(data)
         } catch (error) {
             reject(error)

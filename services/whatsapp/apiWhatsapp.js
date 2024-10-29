@@ -66,7 +66,7 @@ const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText
 
 };
 
-const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
+const sendIndividualMessage = async (to, phoneNumberId, bodyText, message) => {
 
     return new Promise(async (resolve, reject) => {
         var token = await refreshAccessToken();
@@ -79,13 +79,18 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
 
 
-        const data = {
+        var data = {
             messaging_product: "whatsapp",
             to: to,
             text: {
                 body: bodyText,
-            },
+            }
         };
+        if (message) {
+            data.context = {
+                message_id: message.id,
+            }
+        }
 
         try {
             const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
@@ -101,7 +106,7 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 };
 
 
-const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
+const sendConfirmationMessage = async (to, phoneNumberId, bodyText, message) => {
     var token = await refreshAccessToken();
 
     console.log("************** start sendConfirmationMessage **************************");
@@ -113,12 +118,13 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
 
 
 
-    const data = {
+    var data = {
         messaging_product: "whatsapp",
 
         recipient_type: "individual",
         to: to,
         type: "interactive",
+
         interactive: {
             type: "button",
             header: {
@@ -149,6 +155,11 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
                     }
                 ]
             }
+        }
+    }
+    if (message) {
+        data.context = {
+            message_id: message.id,
         }
     }
 
