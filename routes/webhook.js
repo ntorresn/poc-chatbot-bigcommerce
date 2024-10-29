@@ -55,6 +55,8 @@ router.post('/', async function (req, res, next) {
     console.log('ress: ', ress)
     console.log("..................... start getMessageKey .....................")
 
+    categories = await getCategories()
+    products = await getProducts()
 
     if (getMessageKey(req.body)) {
 
@@ -64,8 +66,6 @@ router.post('/', async function (req, res, next) {
         console.log("::::: userInfo ", userPhone, " message ", message)
 
 
-        categories = await getCategories()
-        products = await getProducts()
 
 
         let training = trainingAssistant(categories, products)
