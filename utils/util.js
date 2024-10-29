@@ -94,6 +94,7 @@ const trainingAssistant = (categories, products) => {
          - El usuario puede eliminar el carrito completo es lo mismo que vaciarlo en ese caso tipoRespuesta debe ser "vaciarcarro"
          - Si el usuario decide eliminar un solo producto o elemento del carrito en ese caso tipoRespuesta debe ser "eliminarelemento"
          - Si el usuario desea editar o modificar un producto en el campo tipoRespuesta debes devolver "editarproducto"
+         - Si te piden categorias debes devolver el tipoRespuesta como "categorias"
          - De lo contrario vacio
 
      ¡Ofrece un servicio amigable y ayuda al usuario a encontrar lo que necesita con precisión y claridad!
