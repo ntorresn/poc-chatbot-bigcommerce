@@ -336,6 +336,7 @@ router.post('/', async function (req, res, next) {
 
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         console.log(categories);
+        console.log(categories.length);
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
         await sendIndividualMessage(userPhone, phoneNumberId,
