@@ -246,8 +246,8 @@ router.post('/', async function (req, res, next) {
 
                         case "categorias":
                             if (response.categorias) {
-                                const categoriasTexto = categorias.join('\n');
-                                txt = `${response.mensajeRespuesta}\n\n ${categoriasTexto} `
+                                const categoriasTexto = response.categorias.join('\n');
+                                txt = `${response.mensasjeRespuesta}\n\n ${categoriasTexto} `
                                 sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto);
                             }
                             break;
