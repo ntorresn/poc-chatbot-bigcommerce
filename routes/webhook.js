@@ -244,7 +244,12 @@ router.post('/', async function (req, res, next) {
                             }
                             break;
 
-                        case "":
+                        case "categorias":
+                            if (response.categorias) {
+                                const categoriasTexto = categorias.join('\n');
+                                txt = `${response.mensajeRespuesta}\n\n ${categoriasTexto} `
+                                sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto);
+                            }
                             break;
 
 
