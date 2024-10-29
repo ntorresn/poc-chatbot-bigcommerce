@@ -6,11 +6,11 @@ const { CLIENT_ID, CLIENT_SECRET, GRAPH_API_TOKEN } = process.env
 
 const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText, bodyText, footerText) => {
 
-    logger.info("************** start sendIndividualMessage **************************");
-    logger.info("to: ", to);
-    logger.info("phoneNumberId: ", phoneNumberId);
-    logger.info("bodyText: ", bodyText);
-    logger.info("************** end  sendIndividualMessage **************************");
+    console.log("************** start sendIndividualMessage **************************");
+    console.log("to: ", to);
+    console.log("phoneNumberId: ", phoneNumberId);
+    console.log("bodyText: ", bodyText);
+    console.log("************** end  sendIndividualMessage **************************");
 
     var token = await refreshAccessToken();
     const axios = require('axios');
@@ -70,11 +70,11 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
     var token = await refreshAccessToken();
 
-    logger.info("************** start sendIndividualMessage **************************");
-    logger.info("to: ", to);
-    logger.info("phoneNumberId: ", phoneNumberId);
-    logger.info("bodyText: ", bodyText);
-    logger.info("************** end  sendIndividualMessage **************************");
+    console.log("************** start sendIndividualMessage **************************");
+    console.log("to: ", to);
+    console.log("phoneNumberId: ", phoneNumberId);
+    console.log("bodyText: ", bodyText);
+    console.log("************** end  sendIndividualMessage **************************");
 
 
 
@@ -101,11 +101,11 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
     var token = await refreshAccessToken();
 
-    logger.info("************** start sendConfirmationMessage **************************");
-    logger.info("to: ", to);
-    logger.info("phoneNumberId: ", phoneNumberId);
-    logger.info("bodyText: ", bodyText);
-    logger.info("************** end  sendConfirmationMessage **************************");
+    console.log("************** start sendConfirmationMessage **************************");
+    console.log("to: ", to);
+    console.log("phoneNumberId: ", phoneNumberId);
+    console.log("bodyText: ", bodyText);
+    console.log("************** end  sendConfirmationMessage **************************");
 
 
 
@@ -161,11 +161,11 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText) => {
 };
 
 const sendImageMessage = async (to, phoneNumberId, urlImage) => {
-    logger.info("************** start sendImageMessage **************************");
-    logger.info("to", to);
-    logger.info("phoneNumberId", phoneNumberId);
-    logger.info("urlImage", urlImage);
-    logger.info("************** end sendImageMessage **************************");
+    console.log("************** start sendImageMessage **************************");
+    console.log("to", to);
+    console.log("phoneNumberId", phoneNumberId);
+    console.log("urlImage", urlImage);
+    console.log("************** end sendImageMessage **************************");
 
     var token = await refreshAccessToken();
 
@@ -188,7 +188,7 @@ const sendImageMessage = async (to, phoneNumberId, urlImage) => {
             },
         });
 
-        logger.info(
+        console.log(
             "Mensaje con imagen y detalles enviado con éxito:",
             response.data
         );
@@ -203,11 +203,11 @@ const sendImageMessage = async (to, phoneNumberId, urlImage) => {
 
 const showProductWithImage = async (to, phoneNumberId, product) => {
 
-    logger.info("************** start showProductWithImage **************************");
-    logger.info("to", to);
-    logger.info("phoneNumberId", phoneNumberId);
-    logger.info("product", product);
-    logger.info("************** end showProductWithImage **************************");
+    console.log("************** start showProductWithImage **************************");
+    console.log("to", to);
+    console.log("phoneNumberId", phoneNumberId);
+    console.log("product", product);
+    console.log("************** end showProductWithImage **************************");
     var token = await refreshAccessToken();
 
     try {
@@ -229,7 +229,7 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
             },
         });
 
-        logger.info(
+        console.log(
             "Mensaje con imagen y detalles enviado con éxito:",
             response.data
         );
