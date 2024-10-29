@@ -5,52 +5,59 @@ const logger = require('../../utils/logger.js');
 const { BIGCOMMERCE_AUTH_TOKEN } = process.env;
 const getCategories = async () => {
 
-    try {
-        const headers = {
-            "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
-            "Content-Type": "application/json",
-        };
-        const respuesta = await axios.get(
-            `${bigcommerceURL}catalog/categories`,
-            { headers }
-        );
+    return new Promise(async (resolve, reject) => {
+        try {
+            const headers = {
+                "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
+                "Content-Type": "application/json",
+            };
+            const respuesta = await axios.get(
+                `${bigcommerceURL}catalog/categories`,
+                { headers }
+            );
 
-        const categoriesInfo = respuesta.data.data.map((category) => ({
-            name: category.name,
-            description: category.description,
-        }));
+            const categoriesInfo = respuesta.data.data.map((category) => ({
+                category_id: category.category_id,
+                name: category.name,
+                description: category.description,
+                image_url: category.image_url
+            }));
 
-        return categoriesInfo;
-    } catch (error) {
-        console.error("Error al obtener las categorías:", error);
-        throw error;
-    }
+            resolve(categoriesInfo);
+        } catch (error) {
+            console.error("Error al obtener las categorías:", error);
+            reject("Error al obtener las categorías:", error);
+        }
+    });
 };
 
 const createCart = async (line_items) => {
-    const cartData = { line_items };
+    return new Promise(async (resolve, reject) => {
+        const cartData = { line_items };
 
-    try {
-        const response = await axios.post(`${bigcommerceURL}carts`, cartData, {
-            headers: {
-                "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-        });
+        try {
+            const response = await axios.post(`${bigcommerceURL}carts`, cartData, {
+                headers: {
+                    "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            });
 
-        if (response.data.data.id) {
-            logger.info('BIGCOMMERCE RESPONSE createCart : ', response.data.data.id);
-            return response.data.data.id
-            // getCart(response.data.data.id);
+            if (response.data.data.id) {
+                logger.info('BIGCOMMERCE RESPONSE createCart : ', response.data.data.id);
+                resolve(response.data.data.id)
+                // getCart(response.data.data.id);
+            }
+            //return response.data;
+        } catch (error) {
+            console.error(
+                "Error creando el carrito:",
+                error.response ? error.response.data : error.message
+            );
+            reject("Error creando el carrito:", error.response ? error.response.data : error.message);
         }
-        //return response.data;
-    } catch (error) {
-        console.error(
-            "Error creando el carrito:",
-            error.response ? error.response.data : error.message
-        );
-    }
+    });
 };
 
 const generateCheckout = async (id) => {
@@ -94,35 +101,40 @@ const getCart = async (id) => {
 };
 
 const getProducts = async () => {
-    try {
-        const headers = {
-            "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
-            "Content-Type": "application/json",
-        };
-        const respuesta = await axios.get(
-            `${bigcommerceURL}catalog/products`,
-            { headers }
-        );
-        let products = respuesta.data.data;
-        const productsImages = await Promise.all(
-            products.map(async (p) => {
-                const image = await getImageProduct(p.id);
-                return {
-                    id: p.id,
-                    name: p.name,
-                    description: p.description,
-                    price: p.price,
-                    imageUrl: image[0].url.replace("?c=1", ""),
-                };
-            })
-        );
 
-        return productsImages
+    return new Promise(async (resolve, reject) => {
 
-    } catch (error) {
-        console.error("Error al obtener los productos:", error);
-        throw error;
-    }
+        try {
+            const headers = {
+                "X-Auth-Token": BIGCOMMERCE_AUTH_TOKEN,
+                "Content-Type": "application/json",
+            };
+            const respuesta = await axios.get(
+                `${bigcommerceURL}catalog/products`,
+                { headers }
+            );
+            let products = respuesta.data.data;
+            const productsImages = await Promise.all(
+                products.map(async (p) => {
+                    const image = await getImageProduct(p.id);
+                    return {
+                        id: p.id,
+                        name: p.name,
+                        description: p.description,
+                        price: p.price,
+                        imageUrl: image[0].url.replace("?c=1", ""),
+                    };
+                })
+            );
+
+            resolve(productsImages)
+
+        } catch (error) {
+            console.error("Error al obtener los productos:", error);
+            reject("Error al obtener los productos:", error);
+            throw error;
+        }
+    })
 };
 const getImageProduct = async (id) => {
     try {
