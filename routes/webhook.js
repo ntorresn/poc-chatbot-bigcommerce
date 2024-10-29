@@ -116,7 +116,7 @@ router.post('/', async function (req, res, next) {
 
                 var responseAddProductToStore = await addProductToStore(producto, userPhone)
                 console.log(`4 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
-                console.log('response ', response)
+                console.log('responseAddProductToStore ', responseAddProductToStore)
 
                 if (responseAddProductToStore.status == 'success') {
                     const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
