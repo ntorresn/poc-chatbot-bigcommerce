@@ -330,12 +330,14 @@ router.post('/', async function (req, res, next) {
     }
 
 
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    console.log(categories);
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
 
     if (!user && userPhone) {
+
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        console.log(categories);
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
         await sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
             🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
