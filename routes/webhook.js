@@ -328,6 +328,11 @@ router.post('/', async function (req, res, next) {
     userPhone = message?.from ?? null;
     console.log("::::: userInfo ", userPhone, " message ", message)
 
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    console.log(categories);
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+
     if (!user && userPhone) {
         await sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
