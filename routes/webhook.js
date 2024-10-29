@@ -89,7 +89,11 @@ router.post('/', async function (req, res, next) {
             var quantity = parseInt(text, 10);
             if (!isNaN(quantity) && idproducto) {
                 console.log('!isNaN(quantity) && idproducto => quantity = ', quantity, ' idproducto = ', idproducto)
+
+                console.log(`1 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
+
                 await loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
+                console.log(`2 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
@@ -100,17 +104,19 @@ router.post('/', async function (req, res, next) {
                 let producto = getProductById(products, idproducto)
                 producto.quantity = quantity
                 console.log('producto', producto)
+                console.log(`3 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
 
 
-                response = await addProductToStore(producto, userPhone)
-
+                var responseAddProductToStore = await addProductToStore(producto, userPhone)
+                console.log(`4 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
                 console.log('response ', response)
 
-                if (response.status == 'success') {
+                if (responseAddProductToStore.status == 'success') {
                     const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
+                    console.log(`5 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 } else {
-                    const txt = `❌ ${response.message}`;
+                    const txt = `❌ ${responseAddProductToStore.message}`;
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 }
 
@@ -125,12 +131,12 @@ router.post('/', async function (req, res, next) {
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     logger.error("########## Cantidad no permitida  ###########", idproductoEditar);
                 }
-                response = await editProductStore(producto, userPhone)
-                if (response.status == 'success') {
-                    txt = `✅ ${response.message}`;
+                var responseEditProductStore = await editProductStore(producto, userPhone)
+                if (responseEditProductStore.status == 'success') {
+                    txt = `✅ ${responseEditProductStore.message}`;
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 } else {
-                    txt = `❌ ${response.message}`;
+                    txt = `❌ ${responseEditProductStore.message}`;
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 }
 
