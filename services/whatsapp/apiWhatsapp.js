@@ -68,32 +68,35 @@ const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText
 
 const sendIndividualMessage = async (to, phoneNumberId, bodyText) => {
 
-    var token = await refreshAccessToken();
+    return new Promise(async (resolve, reject) => {
+        var token = await refreshAccessToken();
 
-    console.log("************** start sendIndividualMessage **************************");
-    console.log("to: ", to);
-    console.log("phoneNumberId: ", phoneNumberId);
-    console.log("bodyText: ", bodyText);
-    console.log("************** end  sendIndividualMessage **************************");
+        console.log("************** start sendIndividualMessage **************************");
+        console.log("to: ", to);
+        console.log("phoneNumberId: ", phoneNumberId);
+        console.log("bodyText: ", bodyText);
+        console.log("************** end  sendIndividualMessage **************************");
 
 
 
-    const data = {
-        messaging_product: "whatsapp",
-        to: to,
-        text: {
-            body: bodyText,
-        },
-    };
+        const data = {
+            messaging_product: "whatsapp",
+            to: to,
+            text: {
+                body: bodyText,
+            },
+        };
 
-    try {
-        const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Error sending individual message:", error.response ? error.response.data : error.message);
-    }
+        try {
+            const response = await axios.post(`${graphURL}${phoneNumberId}/messages`, data, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            resolve(response.data)
+        } catch (error) {
+            console.error("Error sending individual message:", error.response ? error.response.data : error.message);
+            reject("Error sending individual message:", error.response ? error.response.data : error.message)
+        }
+    });
 
 };
 
