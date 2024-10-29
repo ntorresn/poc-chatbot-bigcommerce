@@ -334,17 +334,14 @@ router.post('/', async function (req, res, next) {
 
     if (!user && userPhone) {
 
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        console.log(categories);
-        console.log(categories.length);
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%% xxx %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
 
         await sendIndividualMessage(userPhone, phoneNumberId,
             `¡Hola! 👋 Bienvenido a Macsodi 
             🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
             Estan son algunas de las categorias que tenemos disponible para ti: \n
-             ${categories.map((category) => `${category.name}\n`).join(", "), null}
-            `);
+             ${categories.map((category) => `${category.name}\n`).join(", ")}
+            `, null);
         user = await createUser(userPhone)
         await createStore(userPhone)
     }
