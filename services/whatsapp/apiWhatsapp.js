@@ -232,7 +232,10 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
             type: "image",
             image: {
                 link: product.imageUrl,
-                caption: `*${product.name}*\n💰Precio: ${product.price}\n${product.description.replace(/<\/?p>/g, "")}`,
+                caption: `*${product.name}*\n
+                          💰Precio: ${product.price}\n
+                          ${product.description.replace(/<\/?p>/g, "")}
+                          \n\n Ingresa la cantidad: `,
             },
         };
 
