@@ -54,6 +54,7 @@ router.post('/', async function (req, res, next) {
     let ress = getMessageKey(req.body)
     console.log('ress: ', ress)
     console.log("..................... start getMessageKey .....................")
+    /*
 
     categories = await getCategories()
     products = await getProducts()
@@ -345,6 +346,7 @@ router.post('/', async function (req, res, next) {
         user = await createUser(userPhone)
         await createStore(userPhone)
     }
+    */
 
 
 
