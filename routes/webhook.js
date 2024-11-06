@@ -83,9 +83,10 @@ router.post('/', async function (req, res, next) {
         console.log('[userPhone = ', userPhone)
         console.log('[message] = ', message)
         console.log('[phoneNumberId] = ', phoneNumberId)
+        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
 
 
-        await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
+        // await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
         /*
      
      
