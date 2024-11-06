@@ -50,6 +50,8 @@ router.post('/', async function (req, res, next) {
 
 
 
+    console.log("\n\n\n\n\n\n")
+    console.log("----------------------------------------------------[1]-------------------------------------------------------")
     console.log("..................... start getMessageKey .....................")
     let ress = getMessageKey(req.body)
     console.log('ress: ', ress)
@@ -68,6 +70,8 @@ router.post('/', async function (req, res, next) {
         console.log(response);
         console.log("..................... end   ia .....................")
     }
+    console.log("----------------------------------------------------[2]-------------------------------------------------------")
+    console.log("\n\n\n\n\n\n")
     /*
 
    if (getMessageKey(req.body)) {
