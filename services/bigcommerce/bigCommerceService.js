@@ -15,6 +15,13 @@ const getCategories = async () => {
             { headers }
         );
 
+        console.log(':::::::::::: start respuesta.data.data :::::::::::');
+        console.log(respuesta.data.data);
+        console.log(':::::::::::: end respuesta.data.data :::::::::::');
+
+
+
+
         const categoriesInfo = respuesta.data.data.map((category) => ({
             category_id: category.category_id,
             name: category.name,
