@@ -52,28 +52,31 @@ router.post('/', async function (req, res, next) {
 
     console.log("\n\n\n\n\n\n")
     console.log("----------------------------------------------------[1]-------------------------------------------------------")
-    console.log("..................... start getMessageKey .....................")
+    console.log("..................... start MessageKey .....................")
     let MessageKey = getMessageKey(req.body)
     console.log('MessageKey: ', MessageKey)
-    console.log("..................... start getMessageKey .....................")
+    console.log("..................... end MessageKey .....................")
 
 
-    categories = await getCategories()
-    products = await getProducts()
-    console.log("Categories ", categories)
 
-    let training = trainingAssistant(categories, products)
-    if (getMessageKey(req.body)) {
-        const text = extractTextMessage(req.body);
-        let response = await sendCompletionsAndQuestion(training, text)
-        console.log("..................... start ia .....................")
-        console.log(response);
-        console.log("..................... end   ia .....................")
-    }
+
 
 
     if (MessageKey) {
 
+        categories = await getCategories()
+        products = await getProducts()
+        console.log("Categories ", categories)
+
+
+        let training = trainingAssistant(categories, products)
+        if (getMessageKey(req.body)) {
+            const text = extractTextMessage(req.body);
+            let response = await sendCompletionsAndQuestion(training, text)
+            console.log("..................... start ia .....................")
+            console.log(response);
+            console.log("..................... end   ia .....................")
+        }
 
 
         phoneNumberId = extractPhoneNumberId(req.body)
@@ -82,6 +85,9 @@ router.post('/', async function (req, res, next) {
         console.log('[userPhone = ', userPhone)
         console.log('[message] = ', message)
         console.log('[phoneNumberId] = ', phoneNumberId)
+
+
+        await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
         /*
      
      
