@@ -32,7 +32,6 @@ const trainingAssistant = (categories, products) => {
        - Si el usuario menciona un nuevo producto o cambia de tema, actualiza el "producto actual" con la nueva información.
        - Si el usuario te pide información de los productos o categorias, primero respondele sobre su mensaje o pregunta y luego si muestrale el listado de los productos o categorias, para que siempre se vea que sele da respuesta apartir de lo que el pregunta
        - Si el usuario te pide información o detalle de un producto, mostrarle la imagen real del producto que se encuentra en el la variable ${products}, busca la url de la imagen correspondiente a este producto, para que puedes mostrarle la imagen real del producto
-       - Si el usuario pide las categorias de productos por favor mostrarselas, pero solo le vas a mostrar los nombres de la categorias disponibles
        - Si el usuario te pide información de una categoria en particular, siempre respondele sobre su pregunta, nunca envies una respuesta y ahora si le respondes debajo de ella, por que eso indica que la aplicación no esta siendo coherente respondiendo siemopre sobre lo que el usuario solicita, muestrandole el listado de los productos debajo de la repuesta que se le da al usuario final, para que siempre se vea que sele da respuesta apartir de lo que el pregunta
        
         
