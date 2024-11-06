@@ -73,6 +73,7 @@ router.post('/', async function (req, res, next) {
         const text = extractTextMessage(req.body);
         let response = await sendCompletionsAndQuestion(training, text)
         console.log("..................... start ia .....................")
+        response = JSON.parse(response)
         console.log(response);
         console.log("..................... end   ia .....................")
 
@@ -86,7 +87,7 @@ router.post('/', async function (req, res, next) {
         console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
 
 
-        // await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
+        await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
         /*
      
      
