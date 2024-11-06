@@ -70,13 +70,11 @@ router.post('/', async function (req, res, next) {
 
 
         let training = trainingAssistant(categories, products)
-        if (getMessageKey(req.body)) {
-            const text = extractTextMessage(req.body);
-            let response = await sendCompletionsAndQuestion(training, text)
-            console.log("..................... start ia .....................")
-            console.log(response);
-            console.log("..................... end   ia .....................")
-        }
+        const text = extractTextMessage(req.body);
+        let response = await sendCompletionsAndQuestion(training, text)
+        console.log("..................... start ia .....................")
+        console.log(response);
+        console.log("..................... end   ia .....................")
 
 
         phoneNumberId = extractPhoneNumberId(req.body)
