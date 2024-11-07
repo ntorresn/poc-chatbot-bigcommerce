@@ -16,7 +16,7 @@ const getCategories = async () => {
         );
 
         const categoriesInfo = respuesta.data.data.map((category) => ({
-            category_id: category.id,
+            id: category.id,
             name: category.name,
             description: category.description,
             image_url: category.image_url
