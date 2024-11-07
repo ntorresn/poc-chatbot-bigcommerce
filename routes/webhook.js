@@ -96,7 +96,7 @@ router.post('/', async function (req, res, next) {
 
         await loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
 
-        await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
+        // await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
 
 
         // console.log(JSON.stringify(req.body, null, 6))
