@@ -62,10 +62,17 @@ router.post('/', async function (req, res, next) {
 
 
 
+
+
     if (MessageKey) {
 
         categories = await getCategories()
         products = await getProducts()
+
+        console.log("..........................................")
+        console.log(" categories.length: ", categories.length);
+        console.log(" products.length: ", products.length);
+        console.log("..........................................")
 
 
         let training = trainingAssistant(categories, products)
