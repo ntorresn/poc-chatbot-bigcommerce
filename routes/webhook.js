@@ -74,6 +74,14 @@ router.post('/', async function (req, res, next) {
         console.log(" products.length: ", products.length);
         console.log("..........................................")
 
+        phoneNumberId = extractPhoneNumberId(req.body)
+        message = extractMessage(req.body) ?? null
+        userPhone = message?.from ?? null;
+        console.log('[userPhone = ', userPhone)
+        console.log('[message] = ', message)
+        console.log('[phoneNumberId] = ', phoneNumberId)
+        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
+
 
         let training = trainingAssistant(categories, products)
         const text = extractTextMessage(req.body);
@@ -84,13 +92,6 @@ router.post('/', async function (req, res, next) {
         console.log("..................... end   ia .....................")
 
 
-        phoneNumberId = extractPhoneNumberId(req.body)
-        message = extractMessage(req.body) ?? null
-        userPhone = message?.from ?? null;
-        console.log('[userPhone = ', userPhone)
-        console.log('[message] = ', message)
-        console.log('[phoneNumberId] = ', phoneNumberId)
-        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
 
 
         await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
