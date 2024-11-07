@@ -80,7 +80,6 @@ router.post('/', async function (req, res, next) {
         console.log('[userPhone = ', userPhone)
         console.log('[message] = ', message)
         console.log('[phoneNumberId] = ', phoneNumberId)
-        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
 
 
         let training = trainingAssistant(categories, products)
@@ -89,6 +88,8 @@ router.post('/', async function (req, res, next) {
         console.log("..................... start ia .....................")
         response = JSON.parse(response)
         console.log(response);
+        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
+
         console.log("..................... end   ia .....................")
 
 
