@@ -283,7 +283,7 @@ const sendCategories = async (to, phoneNumberId, categories) => {
     console.log("************** start sendCategories **************************");
     console.log("to:", to);
     console.log("phoneNumberId:", phoneNumberId);
-    console.log("urlImage:", urlImage);
+    console.log("categories :", categories.length);
     console.log("************** end sendCategories **************************");
 
     const token = await refreshAccessToken();
