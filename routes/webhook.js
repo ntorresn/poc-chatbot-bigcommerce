@@ -84,6 +84,9 @@ router.post('/', async function (req, res, next) {
 
         let training = trainingAssistant(categories, products)
         const text = extractTextMessage(req.body);
+
+        await loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
+
         let response = await sendCompletionsAndQuestion(training, text)
         console.log("..................... start ia .....................")
         response = JSON.parse(response)
@@ -94,7 +97,6 @@ router.post('/', async function (req, res, next) {
 
 
 
-        await loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
 
         // await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta, message);
 
