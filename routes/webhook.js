@@ -66,7 +66,6 @@ router.post('/', async function (req, res, next) {
 
         categories = await getCategories()
         products = await getProducts()
-        console.log("Categories ", categories)
 
 
         let training = trainingAssistant(categories, products)
