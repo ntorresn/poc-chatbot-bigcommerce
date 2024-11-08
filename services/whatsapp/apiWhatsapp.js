@@ -4,6 +4,7 @@ const { graphURL } = require("../../config/urls.js");
 const logger = require('./../../utils/logger');
 const { CLIENT_ID, CLIENT_SECRET, GRAPH_API_TOKEN } = process.env
 
+
 const sendInteractiveMessage = async (to, phoneNumberId, rowsSection, headerText, bodyText, footerText) => {
 
     console.log("************** start sendIndividualMessage **************************");
@@ -277,68 +278,7 @@ const refreshAccessToken = async () => {
     }
 };
 
-const sendCategories = async (to, phoneNumberId, categories) => {
 
-
-    console.log("************** start sendCategories **************************");
-    console.log("to:", to);
-    console.log("phoneNumberId:", phoneNumberId);
-    console.log("categories :", categories.length);
-    console.log("************** end sendCategories **************************");
-
-    const token = await refreshAccessToken();
-
-    // Redimensionar la imagen a 1024x1024 píxeles
-    const resizedImagePath = categories[0].image_url;
-    const resizedImageBuffer = await axios.get(categories[0].image_url, { responseType: 'arraybuffer' });
-
-    await sharp(resizedImageBuffer.data)
-        .resize(1024, 1024)
-        .toFile(resizedImagePath);
-
-    // Ahora, sube la imagen redimensionada a la API de WhatsApp y obtén el media_id
-    const mediaResponse = await axios.post(
-        `${graphURL}${phoneNumberId}/media`, {
-        file: await fs.readFile(resizedImagePath),
-        type: "image/jpeg"
-    }, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
-        }
-    });
-
-    const mediaId = mediaResponse.data.id;
-
-    // Finalmente, envía el mensaje con el `media_id`
-    try {
-        const url = `${graphURL}${phoneNumberId}/messages`;
-        const imageData = {
-            messaging_product: "whatsapp",
-            to: to,
-            type: "image",
-            image: {
-                id: mediaId,
-                caption: `Imagen redimensionada a 1024x1024 píxeles.`,
-            },
-        };
-
-        const response = await axios.post(url, imageData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-
-        console.log("Mensaje con imagen enviado con éxito:", response.data);
-    } catch (error) {
-        console.error(
-            "Error al enviar el mensaje con imagen:",
-            error.response ? error.response.data : error.message
-        );
-        throw error;
-    }
-};
 
 
 
@@ -348,6 +288,5 @@ module.exports = {
     sendIndividualMessage,
     showProductWithImage,
     sendConfirmationMessage,
-    sendImageMessage,
-    sendCategories
+    sendImageMessage
 };

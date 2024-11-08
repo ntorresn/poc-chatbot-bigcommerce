@@ -3,7 +3,7 @@ const { generateCheckout, createCart, getProducts, getCategories } = require('..
 const { extractMessage, extractPhoneNumberId, extractTextMessage, trainingAssistant, getProductById, getCartResume, getMessageKey } = require('../utils/util.js');
 const { getUser, createUser } = require('../services/poc-api/userService.js');
 const { createStore, addProductToStore, removeProductFromStore, getStore, removeStore, editProductStore } = require('../services/poc-api/cartService.js');
-const { sendIndividualMessage, sendInteractiveMessage, showProductWithImage, sendConfirmationMessage, sendImageMessage, sendCategories } = require('../services/whatsapp/apiWhatsapp.js');
+const { sendIndividualMessage, sendInteractiveMessage, showProductWithImage, sendConfirmationMessage, sendImageMessage } = require('../services/whatsapp/apiWhatsapp.js');
 const { sendCompletionsAndQuestion } = require('../services/open-ia/openIaService.js');
 const logger = require('./../utils/logger');
 
@@ -18,13 +18,31 @@ var user = null
 var userPhone = null
 
 router.post('/test-ia', async function (req, res, next) {
+
     let categories = await getCategories()
     let products = await getProducts()
+
+    userPhone = "573160794094";
+    phoneNumberId = "428066220396970"
+
+    const sendCategoriesAsCarousel = async (to, phoneNumberId, categories) => {
+        for (const category of categories) {
+            await sendImageMessage(to, phoneNumberId, category);
+        }
+    };
+
+
+    sendCategoriesAsCarousel("NUMERO_DESTINATARIO", "ID_NUMERO_WHATSAPP", categories);
+    res.json({ "hello": "world" })
+
+    /*
     let training = trainingAssistant(categories, products)
+
 
     let response = await sendCompletionsAndQuestion(training, req.body.text)
     let data = JSON.parse(response)
     res.json(JSON.parse(response))
+    */
 
 })
 
@@ -277,10 +295,9 @@ router.post('/', async function (req, res, next) {
 
                         case "categorias":
                             if (response.categorias) {
-                                // const categoriasTexto = response.categorias.join('\n');
-                                // txt = `${response.mensasjeRespuesta}\n\n ${categoriasTexto} `
-                                // await sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto, message);
-                                sendCategories(userPhone, phoneNumberId, response.categorias)
+                                const categoriasTexto = response.categorias.map(category => category.name + "\n")
+                                txt = `${response.mensasjeRespuesta}\n\n ${categoriasTexto} `
+                                await sendIndividualMessage(userPhone, phoneNumberId, categoriasTexto, message);
                             }
                             break;
 
