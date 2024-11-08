@@ -106,7 +106,7 @@ const sendIndividualMessage = async (to, phoneNumberId, bodyText, message) => {
 
 };
 
-const sendConfirmationMessage = async (to, phoneNumberId, bodyText, message) => {
+const sendConfirmationMessage = async (to, phoneNumberId, headerText, bodyText, message) => {
     var token = await refreshAccessToken();
 
     console.log("************** start sendConfirmationMessage **************************");
@@ -129,10 +129,10 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText, message) => 
             type: "button",
             header: {
                 type: "text",
-                text: "Confirmación"
+                text: headerText
             },
             body: {
-                text: "¿Estás seguro de que deseas continuar?"
+                text: bodyText
             },
             footer: {
                 text: "Elige una opción"
@@ -142,14 +142,14 @@ const sendConfirmationMessage = async (to, phoneNumberId, bodyText, message) => 
                     {
                         type: "reply",
                         reply: {
-                            id: "confirm_yes",  // ID para la opción "Sí"
+                            id: "confirm_yes",
                             title: "Sí"
                         }
                     },
                     {
                         type: "reply",
                         reply: {
-                            id: "confirm_no",  // ID para la opción "No"
+                            id: "confirm_no",
                             title: "No"
                         }
                     }
@@ -232,10 +232,7 @@ const showProductWithImage = async (to, phoneNumberId, product) => {
             type: "image",
             image: {
                 link: product.imageUrl,
-                caption: `*${product.name}*\n
-                          💰Precio: ${product.price}\n
-                          ${product.description.replace(/<\/?p>/g, "")}
-                          \n\n Ingresa la cantidad: `,
+                caption: `*${product.name.trim()}*\n💰*Precio:* $ ${product.price}\n*Descripción*: ${product.description.replace(/<\/?p>/g, "")}`,
             },
         };
 
