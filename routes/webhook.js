@@ -210,7 +210,7 @@ router.post('/', async function (req, res, next) {
                                 txt = `Resumen de compra:\n\n${resume}\n\n💰 *Total de la compra:* $${total} \n\n Deseas realizar el pago`
                                 await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                             } else {
-                                txt = `🟡 No has registrado productos en el carrito de compras `,
+                                txt = `🟡 En este momento tu carrito está vacio`,
                                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                             }
 
@@ -353,21 +353,14 @@ router.post('/', async function (req, res, next) {
 
 
 
-    /*
+
     if (!user && userPhone) {
- 
- 
- 
-        await sendIndividualMessage(userPhone, phoneNumberId,
-            `¡Hola! 👋 Bienvenido a Macsodi 
-            🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \n
-            Estan son algunas de las categorias que tenemos disponible para ti: \n
-             ${categories.map((category) => `${category.name}\n`).join(", ")}
-            `, null);
+
+        await sendIndividualMessage(userPhone, phoneNumberId, `¡Hola! 👋 Bienvenido a Macsodi 🛒\n\nEstamos encantados de ayudarte con tus compras. 😊 \nEstan son algunas de las categorias que tenemos disponible para ti: \n\n${categories.map((category) => `${category.name.trim()}`).join('\n')} `, null);
         user = await createUser(userPhone)
         await createStore(userPhone)
     }
-    */
+
 
     console.log("----------------------------------------------------[2]-------------------------------------------------------")
     console.log("\n\n\n\n\n\n")
