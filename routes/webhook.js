@@ -105,13 +105,6 @@ router.post('/', async function (req, res, next) {
 
         await loading(userPhone, phoneNumberId, 'Estoy procesando tu solicitud espera un momento ⏳...');
 
-        let response = await sendCompletionsAndQuestion(training, text)
-        console.log("..................... start ia .....................")
-        response = JSON.parse(response)
-        console.log(response);
-        console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
-
-        console.log("..................... end   ia .....................")
 
 
 
@@ -185,11 +178,14 @@ router.post('/', async function (req, res, next) {
 
             }
             else {
-                console.log("********************** start ia *************************************");
                 let response = await sendCompletionsAndQuestion(training, text)
+                console.log("..................... start ia .....................")
                 response = JSON.parse(response)
-                console.log('response ia: ', response);
-                console.log("********************** end ia *************************************");
+                console.log(response);
+                console.log('[response.mensajeRespuesta] = ', response.mensajeRespuesta)
+
+                console.log("..................... end   ia .....................")
+
 
                 // await sendIndividualMessage(userPhone, phoneNumberId, response.mensajeRespuesta);
 
