@@ -216,44 +216,45 @@ const sendImageMessage = async (to, phoneNumberId, urlImage) => {
 };
 
 const showProductWithImage = async (to, phoneNumberId, product) => {
+    return new Promise(async (resolve, reject) => {
+        console.log("************** start showProductWithImage **************************");
+        console.log("to", to);
+        console.log("phoneNumberId", phoneNumberId);
+        console.log("product", product);
+        console.log("************** end showProductWithImage **************************");
+        var token = await refreshAccessToken();
 
-    console.log("************** start showProductWithImage **************************");
-    console.log("to", to);
-    console.log("phoneNumberId", phoneNumberId);
-    console.log("product", product);
-    console.log("************** end showProductWithImage **************************");
-    var token = await refreshAccessToken();
+        try {
+            const url = `${graphURL}${phoneNumberId}/messages`;
+            const imageData = {
+                messaging_product: "whatsapp",
+                to: to,
+                type: "image",
+                image: {
+                    link: product.imageUrl,
+                    caption: `*${product.name.trim()}*\n💰*Precio:* $ ${product.price}\n*Descripción*: ${product.description.replace(/<\/?p>/g, "")}`,
+                },
+            };
 
-    try {
-        const url = `${graphURL}${phoneNumberId}/messages`;
-        const imageData = {
-            messaging_product: "whatsapp",
-            to: to,
-            type: "image",
-            image: {
-                link: product.imageUrl,
-                caption: `*${product.name.trim()}*\n💰*Precio:* $ ${product.price}\n*Descripción*: ${product.description.replace(/<\/?p>/g, "")}`,
-            },
-        };
+            const response = await axios.post(url, imageData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
-        const response = await axios.post(url, imageData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-
-        console.log(
-            "Mensaje con imagen y detalles enviado con éxito:",
-            response.data
-        );
-    } catch (error) {
-        logger.error(
-            "Error al enviar el mensaje con imagen y detalles:",
-            error.response ? error.response.data : error.message
-        );
-        throw error;
-    }
+            console.log(
+                "Mensaje con imagen y detalles enviado con éxito:",
+                response.data
+            );
+            resolve(response.data)
+        } catch (error) {
+            logger.error(
+                "Error al enviar el mensaje con imagen y detalles:", error.response ? error.response.data : error.message
+            );
+            reject("Error al enviar el mensaje con imagen y detalles:", error.response ? error.response.data : error.message);
+        }
+    });
 };
 
 const refreshAccessToken = async () => {

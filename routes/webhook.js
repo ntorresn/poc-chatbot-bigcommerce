@@ -326,7 +326,7 @@ router.post('/', async function (req, res, next) {
                     let product = getProductById(products, idproductoEditar)
 
                     let txt = `Has seleccionado el producto : \n*${product.name}*\n`;
-                    await await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
+                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     await showProductWithImage(userPhone, phoneNumberId, product);
                     txt = `¿Cuál es la nueva cantidad que deseas? :`;
                     await await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
