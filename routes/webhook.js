@@ -78,10 +78,6 @@ router.post('/', async function (req, res, next) {
 
 
 
-
-
-
-
     if (MessageKey) {
 
         categories = await getCategories()
@@ -123,30 +119,31 @@ router.post('/', async function (req, res, next) {
 
                 await loading(userPhone, phoneNumberId, 'Por favor espera estamos agregando el producto al carrito ⏳...');
                 console.log(`2 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
+
                 if (quantity <= 0) {
                     const txt = `❌ No puedes ingresar cantidades en 0 o negativas, intentalo nuevamente`;
                     await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                     console.log("########## Cantidad no permitida ###########", idproducto);
-                    quantity = 1
-                }
 
-                let producto = getProductById(products, idproducto)
-                producto.quantity = quantity
-                console.log('producto', producto)
-                console.log(`3 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
-
-
-                var responseAddProductToStore = await addProductToStore(producto, userPhone)
-                console.log(`4 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
-                console.log('responseAddProductToStore ', responseAddProductToStore)
-
-                if (responseAddProductToStore.status == 'success') {
-                    const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
-                    console.log(`5 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
                 } else {
-                    const txt = `❌ ${responseAddProductToStore.message}`;
-                    await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
+                    let producto = getProductById(products, idproducto)
+                    producto.quantity = quantity
+                    console.log('producto', producto)
+                    console.log(`3 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
+
+
+                    var responseAddProductToStore = await addProductToStore(producto, userPhone)
+                    console.log(`4 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
+                    console.log('responseAddProductToStore ', responseAddProductToStore)
+
+                    if (responseAddProductToStore.status == 'success') {
+                        const txt = `Se agregaron  ${quantity} unidades de ${producto.name} al carrito`;
+                        console.log(`5 $$$$$$$$$$$$$$$$$$$$$$$${userPhone}$$$$$$$$$$$$$$$$$$$$$$$$$$$`);
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
+                    } else {
+                        const txt = `❌ ${responseAddProductToStore.message}`;
+                        await sendIndividualMessage(userPhone, phoneNumberId, txt, message);
+                    }
                 }
 
             } else if (!isNaN(quantity) && idproductoEditar) {
