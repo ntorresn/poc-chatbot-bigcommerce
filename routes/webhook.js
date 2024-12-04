@@ -17,6 +17,15 @@ var products = []
 var user = null
 var userPhone = null
 
+router.post('/', (req, res) => {
+    console.log('POST request received:', req.body);
+    res.status(200).send({ message: 'Webhook received' });
+});
+
+router.get('/', (req, res) => {
+    res.status(200).send({ message: 'Webhook GET works' });
+});
+/*
 router.post('/test-ia', async function (req, res, next) {
 
     let categories = await getCategories()
@@ -35,14 +44,7 @@ router.post('/test-ia', async function (req, res, next) {
     sendCategoriesAsCarousel("NUMERO_DESTINATARIO", "ID_NUMERO_WHATSAPP", categories);
     res.json({ "hello": "world" })
 
-    /*
-    let training = trainingAssistant(categories, products)
-
-
-    let response = await sendCompletionsAndQuestion(training, req.body.text)
-    let data = JSON.parse(response)
-    res.json(JSON.parse(response))
-    */
+   
 
 })
 
@@ -352,6 +354,7 @@ router.post('/', async function (req, res, next) {
     res.sendStatus(200);
 
 })
+*/
 
 const loading = async (to, phoneNumberId, text) => {
     return new Promise(async (resolve, reject) => {
