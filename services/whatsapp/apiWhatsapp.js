@@ -1,5 +1,5 @@
 const axios = require('axios');
-// const { instance, token } = require("../../config/axiosInstance");
+const { instance } = require("../../config/axiosInstance");
 const { graphURL } = require("../../config/urls.js");
 const logger = require('./../../utils/logger');
 const { CLIENT_ID, CLIENT_SECRET, GRAPH_API_TOKEN } = process.env

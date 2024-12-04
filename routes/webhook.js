@@ -66,8 +66,6 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
 
-
-
     console.log("\n\n\n\n\n\n")
     console.log("----------------------------------------------------[1]-------------------------------------------------------")
     console.log("..................... start MessageKey .....................")
