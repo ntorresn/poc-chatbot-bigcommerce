@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node poc-chatboot",
+    "dev": "nodemon poc-chatboot"
   },
   "dependencies": {
     "axios": "^1.7.7",
