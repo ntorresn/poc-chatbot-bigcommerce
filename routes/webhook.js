@@ -20,6 +20,7 @@ var userPhone = null
 
 router.get('/', async function (req, res, next) {
 
+    console.log(req.body, { depth: null, colors: true })
     console.log("******************** webhook GET start ***********************")
     console.log(req.query, { depth: null, colors: true })
     console.log("********************webhook GET end ***********************")
