@@ -18,23 +18,23 @@ var user = null
 var userPhone = null
 
 
-router.get("/webhook", (req, res) => {
+router.get('/', async function (req, res, next) {
 
-    console.log("********************webhook start get***********************")
-    console.dir(req.query, { depth: null, colors: true })
-    console.log("********************webhook end get***********************")
+    console.log("******************** webhook GET start ***********************")
+    console.log(req.query, { depth: null, colors: true })
+    console.log("********************webhook GET end ***********************")
 
-    const mode = req.query["hub.mode"];
-    const token = req.query["hub.verify_token"];
-    const challenge = req.query["hub.challenge"];
+    const mode = req.query["hub.mode"]
+    const token = req.query["hub.verify_token"]
+    const challenge = req.query["hub.challenge"]
 
     if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
-        res.status(200).send(challenge);
+        res.status(200).send(challenge)
     } else {
-        res.sendStatus(403);
+        res.sendStatus(403)
     }
-});
 
+})
 
 
 router.post('/', async function (req, res, next) {
