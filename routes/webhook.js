@@ -17,42 +17,25 @@ var products = []
 var user = null
 var userPhone = null
 
-router.post('/', (req, res) => {
-    console.log('POST request received:', req.body);
-    res.status(200).send({ message: 'Webhook received' });
+
+app.get("/webhook", (req, res) => {
+
+    console.log("********************webhook start get***********************")
+    console.dir(req.query, { depth: null, colors: true })
+    console.log("********************webhook end get***********************")
+
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+
+    if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
+        res.status(200).send(challenge);
+    } else {
+        res.sendStatus(403);
+    }
 });
 
-router.get('/', (req, res) => {
-    res.status(200).send({ message: 'Webhook GET works' });
-});
 
-router.post('/test-ia', async function (req, res, next) {
-
-    let categories = await getCategories()
-    let products = await getProducts()
-
-    userPhone = "573160794094";
-    phoneNumberId = "428066220396970"
-
-    const sendCategoriesAsCarousel = async (to, phoneNumberId, categories) => {
-        for (const category of categories) {
-            await sendImageMessage(to, phoneNumberId, category);
-        }
-    };
-
-
-    sendCategoriesAsCarousel("NUMERO_DESTINATARIO", "ID_NUMERO_WHATSAPP", categories);
-    res.json({ "hello": "world" })
-
-
-
-})
-
-router.get('/', async function (req, res, next) {
-
-    res.json({ status: "success", message: "Webhook get" })
-
-})
 
 router.post('/', async function (req, res, next) {
 
