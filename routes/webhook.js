@@ -19,7 +19,7 @@ var userPhone = null
 
 
 
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
 
     console.log("********************webhook start get***********************")
     console.dir(req.query, { depth: null, colors: true })
