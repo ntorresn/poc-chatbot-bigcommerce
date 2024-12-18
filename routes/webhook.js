@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
     if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
         res.status(200).send(challenge);
     } else {
-        res.sendStatus(403);
+        res.sendStatus(200);
     }
 });
 
