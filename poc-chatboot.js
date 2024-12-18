@@ -37,6 +37,10 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/webhook', webhookRouter)
 
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`);
+  next();
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
