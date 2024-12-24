@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
     if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
         res.status(200).send(challenge);
     } else {
-        res.sendStatus(200);
+        res.sendStatus(403);
     }
 });
 
@@ -314,12 +314,8 @@ router.post('/', async function (req, res, next) {
                     }
                 }
             }
-
         }
-
     }
-
-
 
 
     if (!user && userPhone) {
