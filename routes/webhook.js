@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
 });
 
 
-router.post('/', async function (req, res, next) {
+router.post('/conpost', async function (req, res, next) {
 
     console.log("\n\n\n\n\n\n")
     console.log("----------------------------------------------------[1]-------------------------------------------------------")
